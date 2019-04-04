@@ -1,0 +1,10 @@
+#!/bin/sh
+
+branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
+  branch="$(git describe --contains --all HEAD)"
+
+if [ "${branch##refs/heads/}" = "master" ]; then
+  printf 'Do not push to \033[31mmaster\033[0m branch!\n'
+  echo '(You can ignore this by `git push -n`)'
+  exit 1
+fi

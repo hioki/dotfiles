@@ -1,0 +1,37 @@
+[user]
+	email = hiokidaichi@gmail.com
+	name = Daichi Hioki
+[core]
+	excludesfile = ~/.gitignore_global
+	whitespace = cr-at-eol
+	editor = /usr/local/bin/nvim
+[alias]
+  see = browse
+[diff]
+	tool = vimdiff
+[merge]
+	tool = fugitive
+  conflictStyle = diff3
+[mergetool]
+	prompt = false
+[init]
+  templatedir = ~/.git_template
+[pager]
+	log = diff-highlight | less
+	show = diff-highlight | less
+	diff = diff-highlight | less
+[interactive]
+	diffFilter = diff-highlight
+[rebase]
+	autosquash = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[mergetool "fugitive"]
+	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+[ghq]
+  root = ~/.ghq
+[url "git@github.com:"]
+	insteadOf = https://github.com/

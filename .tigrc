@@ -1,0 +1,19 @@
+bind main R !git rebase -i %(commit)
+bind diff R !git rebase -i %(commit)
+set main-view = id date author:email-user commit-title:graph=yes,refs=yes
+set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
+set pager-view  = line-number:yes,interval=1 text
+set stage-view  = line-number:yes,interval=1 text
+set log-view    = line-number:yes,interval=1 text
+set blob-view   = line-number:yes,interval=1 text
+set diff-view   = line-number:yes,interval=1 text:yes,commit-title-overflow=no
+set vertical-split = no
+set split-view-height = 80%
+set diff-context = 6
+bind generic <Ctrl-f> scroll-page-down
+bind generic <Ctrl-b> scroll-page-up
+set ignore-space = all
+set diff-highlight = true
+color  diff-header       default magenta
+color  diff-chunk        black   white
+bind generic y @sh -c "echo %(commit) | pbcopy"
