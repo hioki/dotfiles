@@ -142,6 +142,10 @@ function qrgen() {
   qrencode -o /tmp/qrcode.png $1 && open /tmp/qrcode.png
 }
 
+function gosrc() {
+  cd "$(go env GOROOT)/src"
+}
+
 alias a="alias"
 alias be="bundle exec"
 alias c='code .'
@@ -196,7 +200,6 @@ alias gcancelcommit='git reset --soft HEAD^'
 alias gcanceladd='git reset HEAD'
 alias gt='gtree'
 alias goreautoimport='gore -autoimport'
-alias gosrc="cd '$(go env GOROOT)/src'"
 alias h='cd ..'
 alias hh='cd ../..'
 alias hhh='cd ../../..'
