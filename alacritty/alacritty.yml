@@ -475,6 +475,7 @@ key_bindings:
   - { key: Semicolon, mods: Command|Shift, action: IncreaseFontSize }
   - { key: Minus,     mods: Command,       action: DecreaseFontSize }
   - { key: Semicolon, mods: Control|Shift, action: None }
+  - { key: Yen, chars: "\x5C" }
 
   - { key: Paste,                   action: Paste                            }
   - { key: Copy,                    action: Copy                             }
