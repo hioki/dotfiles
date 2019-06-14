@@ -146,6 +146,10 @@ function gosrc() {
   cd "$(go env GOROOT)/src"
 }
 
+function git-delete-merged-branches() {
+  git branch --merged | grep -vE '^\*|master$|develop$' | xargs -I % git branch -d %
+}
+
 alias a="alias"
 alias be="bundle exec"
 alias c='code .'
@@ -216,7 +220,7 @@ alias t="tree -I vendor -I node_modules"
 alias u="popd"
 alias U="git commit -am 'Update'"
 alias v="nvim"
-alias vk='nvim -c "au VimEnter * DeniteProjectDir file_rec/git"'
+alias vk='nvim -c "au VimEnter * UniteWithProjectDir file_rec/async:app file_rec/async:spec -start-insert"'
 alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
