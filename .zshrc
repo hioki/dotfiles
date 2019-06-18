@@ -220,7 +220,7 @@ alias t="tree -I vendor -I node_modules"
 alias u="popd"
 alias U="git commit -am 'Update'"
 alias v="nvim"
-alias vk='nvim -c "au VimEnter * UniteWithProjectDir file_rec/async:app file_rec/async:spec -start-insert"'
+alias vk='nvim -c "au VimEnter * Denite -start-filter=1 -buffer-name=gtags_path gtags_path"'
 alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
