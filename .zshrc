@@ -158,6 +158,7 @@ function catp() {
 alias a="alias"
 alias be="bundle exec"
 alias c='code .'
+alias checkip='curl -s checkip.amazonaws.com'
 alias d="docker"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
