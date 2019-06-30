@@ -150,6 +150,11 @@ function git-delete-merged-branches() {
   git branch --merged | grep -vE '^\*|master$|develop$' | xargs -I % git branch -d %
 }
 
+function catp() {
+  pygmentize $1
+  cat $1 | pbcopy
+}
+
 alias a="alias"
 alias be="bundle exec"
 alias c='code .'
