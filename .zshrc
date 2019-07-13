@@ -156,6 +156,7 @@ function catp() {
 }
 
 alias a="alias"
+alias artisan="php artisan"
 alias be="bundle exec"
 alias c='code .'
 alias checkip='curl -s checkip.amazonaws.com'
@@ -253,6 +254,8 @@ export PGDATA=/usr/local/var/postgres
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
+
+export PATH="$PATH:$HOME/.composer/vendor/bin"
 
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
