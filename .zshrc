@@ -155,6 +155,14 @@ function catp() {
   cat $1 | pbcopy
 }
 
+function pullconf() {
+  local a="$(ghq root)/github.com/hioki-daichi"
+  (cd "${a}/dotfiles"; git pull --quiet origin master) &
+  (cd "${a}/nvim-config"; git pull --quiet origin master) &
+  (cd "${a}/Personal-Rules-For-Karabiner-Elements"; git pull --quiet origin master; ./update.sh) &
+  wait
+}
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
