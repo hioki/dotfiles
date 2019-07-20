@@ -227,6 +227,7 @@ alias hs='hub browse'
 alias l="gls -lt --human-readable --no-group --classify --color --group-directories-first"
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias lsfullpath='find `pwd` -maxdepth 1'
+alias m="$EDITOR $HOME/Library/Mobile\ Documents/com\~apple\~CloudDocs/memo.md"
 alias nv="nvim"
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
