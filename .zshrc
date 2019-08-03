@@ -280,7 +280,7 @@ USER_BASE_PATH=$(python -m site --user-base)
 export PATH=$PATH:$USER_BASE_PATH/bin
 
 # Rust
-export PATH="$HOME/.cargo/bin:$PATH"
+source $HOME/.cargo/env
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
