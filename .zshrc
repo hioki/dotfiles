@@ -163,6 +163,10 @@ function pullconf() {
   wait
 }
 
+function ppcsv() {
+  nkf $1 | xsv table -
+}
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
