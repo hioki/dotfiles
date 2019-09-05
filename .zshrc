@@ -240,7 +240,7 @@ alias nv="nvim"
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
 alias sl='l'
-alias t="tree -I vendor -I node_modules"
+alias t="tree -I vendor -I node_modules -I target"
 alias tinker='php artisan tinker'
 alias u="popd"
 alias U="git commit -am 'Update'"
@@ -255,6 +255,7 @@ alias ealacritty="$EDITOR ~/.config/alacritty/alacritty.yml"
 alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias vi="nvim"
 alias vim="nvim"
+alias vsm="nvim src/main.rs"
 alias V="nvim -R -"
 alias z='nvim ~/.zshrc'
 alias Z='source ~/.zshrc'
