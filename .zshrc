@@ -185,7 +185,7 @@ alias dc="docker-compose"
 alias dcs="docker-compose stop"
 alias dcu="docker-compose up -d"
 alias dbm="bin/rake db:migrate"
-alias dot="cd $HOME/Dropbox/dotfiles"
+alias dot="cd $(ghq root)/github.com/hioki-daichi/dotfiles"
 alias df="df -h"
 alias diff="colordiff"
 alias dstatall='dstat -tclmdr'
@@ -256,6 +256,7 @@ alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias vi="nvim"
 alias vim="nvim"
 alias vsm="nvim src/main.rs"
+alias vcargo="nvim ./Cargo.toml"
 alias V="nvim -R -"
 alias z='nvim ~/.zshrc'
 alias Z='source ~/.zshrc'
