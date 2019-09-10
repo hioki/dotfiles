@@ -157,9 +157,9 @@ function catp() {
 
 function pullconf() {
   local a="$(ghq root)/github.com/hioki-daichi"
-  (cd "${a}/dotfiles"; git pull --quiet origin master) &
-  (cd "${a}/nvim-config"; git pull --quiet origin master) &
-  (cd "${a}/Personal-Rules-For-Karabiner-Elements"; git pull --quiet origin master; ./update.sh) &
+  (cd "${a}/dotfiles"; git pull origin master) &
+  (cd "${a}/nvim-config"; git pull origin master) &
+  (cd "${a}/Personal-Rules-For-Karabiner-Elements"; git pull origin master; ./update.sh) &
   wait
 }
 
