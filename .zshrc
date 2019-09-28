@@ -297,8 +297,9 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 eval "$(direnv hook zsh)"
 
-fpath=(/usr/local/share/zsh-completions $fpath)
+fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+fpath=($HOME/.zfunc $fpath)
 
 autoload -U compinit
 compinit -u
