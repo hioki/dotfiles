@@ -18,3 +18,5 @@ GTAGS
 /.envrc
 /.solargraph.yml
 /.tags
+
+**/*.bk
