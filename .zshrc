@@ -175,6 +175,7 @@ alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
 alias c='code .'
+alias ca='cargo'
 alias checkip='curl -s checkip.amazonaws.com'
 alias d="docker"
 alias dps="docker ps -a"
