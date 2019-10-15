@@ -20,3 +20,4 @@ GTAGS
 /.tags
 
 **/*.bk
+/ignore/
