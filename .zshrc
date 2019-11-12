@@ -171,12 +171,21 @@ function git_grep_and_blame() {
   git grep -E -n $1 | while IFS=: read i j k; do git blame -L $j,$j $i | cat; done
 }
 
+function head_with_index() {
+  head -n1 $1 | ruby -e 'puts $stdin.read.split(",").map.with_index(1) { |s, idx| "#{idx} #{s}" }'
+}
+
+function search_yaml() {
+  ruby -ryaml -e "puts YAML.load_file(ARGV[0]).select { |k, v| k =~ Regexp.new(ARGV[1]) }.map { |k, v| \"#{v} #{k}\" }" $1 $2
+}
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
 alias c='code .'
 alias ca='cargo'
 alias checkip='curl -s checkip.amazonaws.com'
+alias cutn="cut -d' ' -f$1"
 alias d="docker"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
