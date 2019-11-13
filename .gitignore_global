@@ -20,3 +20,4 @@ GTAGS
 
 **/*.bk
 /ignore/
+/.irb_history
