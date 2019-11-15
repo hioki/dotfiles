@@ -167,6 +167,10 @@ function ppcsv() {
   nkf $1 | xsv table -
 }
 
+function csvcat() {
+  column -s, -t $1
+}
+
 function git_grep_and_blame() {
   git grep -E -n $1 | while IFS=: read i j k; do git blame -L $j,$j $i | cat; done
 }
