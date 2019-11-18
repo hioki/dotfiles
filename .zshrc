@@ -183,6 +183,17 @@ function search_yaml() {
   ruby -ryaml -e "puts YAML.load_file(ARGV[0]).select { |k, v| k =~ Regexp.new(ARGV[1]) }.map { |k, v| \"#{v} #{k}\" }" $1 $2
 }
 
+function rg_with_head() {
+  search_word=$1
+
+  for filepath in $(rg -E sjis -l $search_word ./csv)
+  do
+    echo ${filepath}:
+    echo $(nkf $filepath | head -n 1) $(rg -E sjis $search_word $filepath) | xsv table -
+    echo
+  done
+}
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
@@ -278,6 +289,7 @@ alias Z='source ~/.zshrc'
 alias rs='bin/rails s'
 alias rc='bin/rails c'
 alias rd='bin/rails db -p'
+alias rgs='rg -E sjis'
 alias rm='trash'
 alias w1='watch --interval 1'
 alias xmllint='xmllint --format --encode utf-8'
