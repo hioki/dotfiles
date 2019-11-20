@@ -195,6 +195,8 @@ function rg_with_head() {
   done
 }
 
+function chpwd() { exa }
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
