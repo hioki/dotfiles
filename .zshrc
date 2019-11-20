@@ -185,11 +185,12 @@ function search_yaml() {
 
 function rg_with_head() {
   search_word=$1
+  max_count=1
 
   for filepath in $(rg -E sjis -l $search_word ./csv)
   do
     echo ${filepath}:
-    echo $(nkf $filepath | head -n 1) $(rg -E sjis $search_word $filepath) | xsv table -
+    echo $(nkf $filepath | head -n 1) $(rg -E sjis --max-count $max_count $search_word $filepath) | xsv table -
     echo
   done
 }
