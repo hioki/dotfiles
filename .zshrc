@@ -185,7 +185,7 @@ function search_yaml() {
 
 function rg_with_head() {
   search_word=$1
-  max_count=1
+  max_count=$2
 
   for filepath in $(rg -E sjis -l $search_word ./csv)
   do
