@@ -185,9 +185,10 @@ function search_yaml() {
 
 function rg_with_head() {
   search_word="(,|^)$1(,|$)"
-  max_count=$2
+  max_count=$((${2:-100}))
+  target_dir=${3:-./csv}
 
-  for filepath in $(rg -E sjis -l $search_word ./csv)
+  for filepath in $(rg -E sjis -l $search_word $target_dir)
   do
     echo ${filepath}:
     echo $(nkf $filepath | head -n 1) $(rg -E sjis --max-count $max_count $search_word $filepath) | xsv table -
