@@ -184,7 +184,7 @@ function search_yaml() {
 }
 
 function rg_with_head() {
-  search_word="(,|^)$1(,|$)"
+  search_word="(^|,|,\")$1($|,|\",)"
   max_count=$((${2:-100}))
   target_dir=${3:-./csv}
 
