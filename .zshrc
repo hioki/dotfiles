@@ -198,6 +198,19 @@ function rg_with_head() {
 
 function chpwd() { exa }
 
+function install-rust-devtools {
+  rustup component add \
+    rustfmt \
+    rust-analysis \
+    rust-src \
+    rls-preview
+
+  cargo install \
+    cargo-watch \
+    cargo-web \
+    racer
+}
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
