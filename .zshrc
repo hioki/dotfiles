@@ -332,7 +332,6 @@ export PATH="$HOME/.anyenv/bin:$PATH"
 eval "$(anyenv init -)"
 eval "$(rbenv init - zsh)"
 eval "$(nodenv init -)"
-eval "$(pyenv init -)"
 
 USER_BASE_PATH=$(python -m site --user-base)
 export PATH=$PATH:$USER_BASE_PATH/bin
