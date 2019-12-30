@@ -211,6 +211,10 @@ function install-rust-devtools {
     racer
 }
 
+function gsnv() {
+  ruby -e 'prefix = `git rev-parse --show-cdup`.chomp; files = `git show --pretty="" --name-only`.split.map { |s| prefix + s }.join(" "); system("nvim #{files}")'
+}
+
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
@@ -256,7 +260,6 @@ alias gmt='git mergetool --tool=vimdiff --no-prompt'
 alias gpr='git remote prune origin'
 alias gs='git show'
 alias gsn='git show --name-only'
-alias gsnv='nvim $(git show --pretty="" --name-only)'
 alias gsw='git show --ignore-space-change'
 alias gv='[ -e .git/index ] && nvim .git/index -c "Gitv --all" -c "tabonly" || echo .git/index not found: `pwd`'
 alias gas='git add . && git stash'
