@@ -22,3 +22,4 @@ GTAGS
 /ignore/
 /.irb_history
 .vscode/
+.idea/
