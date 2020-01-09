@@ -1,8 +1,16 @@
 set ideajoin
 set surround
 
+set incsearch
+set nowrapscan
+
 nmap <Tab> %
 vmap <Tab> %
+vmap m %
+
+inoremap <C-a> <D-Left>
+inoremap <C-e> <D-Right>
+inoremap <C-b> <C-o>O
 
 vnoremap v $h
 
