@@ -1,1 +1,10 @@
 set ideajoin
+set surround
+
+nmap <Tab> %
+vmap <Tab> %
+
+nnoremap gh ^
+nnoremap gl $
+
+nnoremap <silent> g. :<C-u>source ~/.ideavimrc<CR>
