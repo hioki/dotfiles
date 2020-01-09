@@ -4,6 +4,8 @@ set surround
 nmap <Tab> %
 vmap <Tab> %
 
+vnoremap v $h
+
 nnoremap gh ^
 nnoremap gl $
 
