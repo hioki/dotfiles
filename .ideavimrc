@@ -13,8 +13,19 @@ inoremap <C-e> <D-Right>
 inoremap <C-b> <C-o>O
 
 vnoremap v $h
+vnoremap gc :action CommentByLineComment<CR>
 
 nnoremap gh ^
 nnoremap gl $
+
+nnoremap ga :action GotoAction<CR>
+nnoremap gc :action CommentByLineComment<CR>
+nnoremap gi :action ShowIntentionActions<CR>
+nnoremap gj :action FileStructurePopup<CR>
+nnoremap gk :action FindInPath<CR>
+nnoremap gr :action RenameElement<CR>
+nnoremap gs :action SearchEverywhere<CR>
+nnoremap gu :action FindUsages<CR>
+nnoremap g<CR> mzA;<ESC>`z
 
 nnoremap <silent> g. :<C-u>source ~/.ideavimrc<CR>
