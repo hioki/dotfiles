@@ -22,6 +22,7 @@ nnoremap gu :action FindUsages<CR>
 nnoremap g<CR> mzA;<ESC>`z
 nnoremap <silent> g, :<C-u>edit ~/.ideavimrc<CR>
 nnoremap <silent> g. :<C-u>source ~/.ideavimrc<CR>
+nnoremap <C-j> :<C-u>w<CR>:<C-u>echo "saved"<CR>
 
 "
 " Insert-mode mappings
