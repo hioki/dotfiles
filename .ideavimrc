@@ -1,10 +1,12 @@
-" Plugins
+" Options
+set clipboard+=unnamed
+set nowrapscan
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
 set ideajoin
 set surround
-
-" Options
-set incsearch
-set nowrapscan
 
 "
 " Normal-mode mappings
@@ -20,8 +22,10 @@ nnoremap gr :action RenameElement<CR>
 nnoremap gs :action SearchEverywhere<CR>
 nnoremap gu :action FindUsages<CR>
 nnoremap g<CR> mzA;<ESC>`z
-nnoremap <silent> g, :<C-u>edit ~/.ideavimrc<CR>
-nnoremap <silent> g. :<C-u>source ~/.ideavimrc<CR>
+nnoremap g<Space> :action Run<CR>
+nnoremap g, :<C-u>edit ~/.ideavimrc<CR>
+nnoremap g. :<C-u>source ~/.ideavimrc<CR>
+nnoremap <ESC><ESC> :<C-u>nohlsearch<CR>
 nnoremap <C-j> :<C-u>w<CR>:<C-u>echo "saved"<CR>
 
 "
