@@ -259,6 +259,8 @@ alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue
 alias gm='git merge'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
 alias gpr='git remote prune origin'
+alias gpo='git push origin'
+alias gpof='git push --force-with-lease origin'
 alias gs='git show'
 alias gsn='git show --name-only'
 alias gsw='git show --ignore-space-change'
