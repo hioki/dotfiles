@@ -1,23 +1,16 @@
+" Plugins
 set ideajoin
 set surround
 
+" Options
 set incsearch
 set nowrapscan
 
-nmap <Tab> %
-vmap <Tab> %
-vmap m %
-
-inoremap <C-a> <D-Left>
-inoremap <C-e> <D-Right>
-inoremap <C-b> <C-o>O
-
-vnoremap v $h
-vnoremap gc :action CommentByLineComment<CR>
-
+"
+" Normal-mode mappings
+"
 nnoremap gh ^
 nnoremap gl $
-
 nnoremap ga :action GotoAction<CR>
 nnoremap gc :action CommentByLineComment<CR>
 nnoremap gi :action ShowIntentionActions<CR>
@@ -27,5 +20,26 @@ nnoremap gr :action RenameElement<CR>
 nnoremap gs :action SearchEverywhere<CR>
 nnoremap gu :action FindUsages<CR>
 nnoremap g<CR> mzA;<ESC>`z
-
+nnoremap <silent> g, :<C-u>edit ~/.ideavimrc<CR>
 nnoremap <silent> g. :<C-u>source ~/.ideavimrc<CR>
+
+"
+" Insert-mode mappings
+"
+inoremap <C-a> <C-o>^
+inoremap <C-e> <C-o>A
+inoremap <C-b> <C-o>O
+
+"
+" Visual-mode mappings
+"
+vnoremap v $h
+vnoremap gc :action CommentByLineComment<CR>
+
+"
+" Others
+"
+" Jump to the corresponding parehthesis
+nmap <Tab> %
+vmap <Tab> %
+vmap m %
