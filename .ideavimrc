@@ -11,22 +11,35 @@ set surround
 "
 " Normal-mode mappings
 "
-nnoremap gh ^
-nnoremap gl $
-nnoremap ga :action GotoAction<CR>
 nnoremap gc :action CommentByLineComment<CR>
+nnoremap gd :action ActivateVersionControlToolWindow<CR>
+nnoremap gh ^
 nnoremap gi :action ShowIntentionActions<CR>
-nnoremap gj :action FileStructurePopup<CR>
 nnoremap gk :action FindInPath<CR>
+nnoremap gl $
+nnoremap goa :action GotoAction<CR>
+nnoremap goc :action GotoClass<CR>
+nnoremap goe :action SearchEverywhere<CR>
+nnoremap gof :action GotoFile<CR>
+nnoremap gos :action GotoSymbol<CR>
 nnoremap gr :action RenameElement<CR>
-nnoremap gs :action SearchEverywhere<CR>
+nnoremap gs :action FileStructurePopup<CR>
 nnoremap gu :action FindUsages<CR>
+nnoremap gx :action ToggleLineBreakpoint<CR>
 nnoremap g<CR> mzA;<ESC>`z
 nnoremap g<Space> :action Run<CR>
 nnoremap g, :<C-u>edit ~/.ideavimrc<CR>
 nnoremap g. :<C-u>source ~/.ideavimrc<CR>
+
+nnoremap <CR>d :<C-u>close<CR>
+nnoremap <CR>v :action SplitVertically<CR>
+
 nnoremap <ESC><ESC> :<C-u>nohlsearch<CR>
-nnoremap <C-j> :<C-u>w<CR>:<C-u>echo "saved"<CR>
+
+nnoremap <C-j> :action SaveAll<CR>
+nnoremap <C-l> :action NextSplitter<CR>
+nnoremap <C-n> :action GotoNextError<CR>
+nnoremap <C-p> :action GotoPreviousError<CR>
 
 "
 " Insert-mode mappings
