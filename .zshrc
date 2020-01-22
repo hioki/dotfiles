@@ -218,7 +218,7 @@ function gsnv() {
 alias a="alias"
 alias artisan="php artisan"
 alias be="bundle exec"
-alias c='code .'
+alias c='clion .'
 alias ca='cargo'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
