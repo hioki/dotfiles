@@ -286,6 +286,7 @@ alias m="$EDITOR $HOME/Library/Mobile\ Documents/com\~apple\~CloudDocs/memo.md"
 alias nv="nvim"
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
+alias s='spt' # spotify-tui
 alias sl='l'
 alias t="tree -I vendor -I node_modules -I target"
 alias tf="terraform"
