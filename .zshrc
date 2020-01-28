@@ -216,7 +216,7 @@ function gsnv() {
 }
 
 alias a="alias"
-alias artisan="php artisan"
+alias atc='docker run --rm -it -v "$(pwd)":/home/rust/src -v "$HOME/Library/Caches/cargo-atcoder":/home/rust/.cache/cargo-atcoder hioki/cargo-atcoder bash'
 alias be="bundle exec"
 alias c='clion .'
 alias ca='cargo'
@@ -315,6 +315,7 @@ alias rc='bin/rails c'
 alias rd='bin/rails db -p'
 alias rgs='rg -E sjis'
 alias rm='trash'
+alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
 alias w1='watch --interval 1'
 alias xmllint='xmllint --format --encode utf-8'
 
@@ -327,8 +328,6 @@ export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
 
-export PATH="$PATH:$HOME/.composer/vendor/bin"
-
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
@@ -339,6 +338,8 @@ eval "$(nodenv init -)"
 
 USER_BASE_PATH=$(python -m site --user-base)
 export PATH=$PATH:$USER_BASE_PATH/bin
+
+export PATH="/usr/local/opt/binutils/bin:$PATH"
 
 # Rust
 source $HOME/.cargo/env
