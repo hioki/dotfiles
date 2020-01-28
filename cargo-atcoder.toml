@@ -30,6 +30,8 @@ macro_rules! input {
 
 #[allow(unused_macros)]
 macro_rules! input_inner {
+    ($iter:expr) => {};
+    ($next:expr, ) => {};
     ($iter:expr, $var:ident : $t:tt $($r:tt)*) => {
         let $var = read_value!($iter, $t);
         input_inner!{$iter $($r)*};
@@ -38,7 +40,6 @@ macro_rules! input_inner {
         let mut $var = read_value!($iter, $t);
         input_inner!{$iter $($r)*};
     };
-    ($iter:expr, ) => {};
 }
 
 #[allow(unused_macros)]
