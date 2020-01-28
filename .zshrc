@@ -216,7 +216,6 @@ function gsnv() {
 }
 
 alias a="alias"
-alias atc='docker run --rm -it -v "$(pwd)":/home/rust/src -v "$HOME/Library/Caches/cargo-atcoder":/home/rust/.cache/cargo-atcoder hioki/cargo-atcoder bash'
 alias be="bundle exec"
 alias c='clion .'
 alias ca='cargo'
@@ -236,7 +235,14 @@ alias df="df -h"
 alias diff="colordiff"
 alias dstatall='dstat -tclmdr'
 alias du="du -h"
-alias kctl="kubectl"
+alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
+alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
+alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
+alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
+alias ealacritty="$EDITOR ~/.config/alacritty/alacritty.yml"
+alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
+alias fooe="$EDITOR ~/foo.txt"
+alias foo="cat ~/foo.txt"
 alias ga='git add'
 alias gb='peco-checkout-branch'
 alias gbdelete='peco-branch-delete'
@@ -277,6 +283,7 @@ alias hh='cd ../..'
 alias hhh='cd ../../..'
 alias ht='sudo htop'
 alias hs='hub browse'
+alias kctl="kubectl"
 alias ls="exa"
 alias less="less -R"
 alias l="exa -ahl --git"
@@ -284,8 +291,12 @@ alias la="gls -lta --human-readable --no-group --classify --color --group-direct
 alias lsfullpath='find `pwd` -maxdepth 1'
 alias m="$EDITOR $HOME/Library/Mobile\ Documents/com\~apple\~CloudDocs/memo.md"
 alias nv="nvim"
-alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
-alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
+alias rs='bin/rails s'
+alias rc='bin/rails c'
+alias rd='bin/rails db -p'
+alias rgs='rg -E sjis'
+alias rm='trash'
+alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
 alias s='spt' # spotify-tui
 alias sl='l'
 alias t="tree -I vendor -I node_modules -I target"
@@ -297,27 +308,17 @@ alias U="git commit -am 'Update'"
 alias v="nvim"
 alias vk='nvim -c "au VimEnter * Denite -start-filter=1 -buffer-name=gtags_path gtags_path"'
 alias vshiftjis='nvim -c ":e ++enc=shift_jis"'
-alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
-alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
-alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias ealacritty="$EDITOR ~/.config/alacritty/alacritty.yml"
-alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias vi="nvim"
 alias vim="nvim"
 alias vsm="nvim src/main.rs"
 alias vcargo="nvim ./Cargo.toml"
 alias V="nvim -R -"
-alias z='nvim ~/.zshrc'
-alias Z='source ~/.zshrc'
-alias rs='bin/rails s'
-alias rc='bin/rails c'
-alias rd='bin/rails db -p'
-alias rgs='rg -E sjis'
-alias rm='trash'
-alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
 alias w1='watch --interval 1'
 alias xmllint='xmllint --format --encode utf-8'
+alias z='nvim ~/.zshrc'
+alias Z='source ~/.zshrc'
+alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
+alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export EDITOR=nvim
