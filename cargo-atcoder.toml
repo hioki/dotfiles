@@ -14,7 +14,7 @@ panic = 'abort'
 [dependencies]
 
 [project]
-# rustc_version = "1.15.1"
+rustc_version = "1.40.0"
 
 template = """
 #[allow(unused_macros)]
@@ -39,6 +39,12 @@ macro_rules! input_inner {
 
 #[allow(unused_macros)]
 macro_rules! read_value {
+    ($next:expr, ( $($t:tt),* )) => {
+        ( $(read_value!($next, $t)),* )
+    };
+    ($next:expr, [ $t:tt ; $len:expr ]) => {
+        (0..$len).map(|_| read_value!($next, $t)).collect::<Vec<_>>()
+    };
     ($iter:expr, $t:ty) => {{
         let v = $iter.next().unwrap();
         v.parse::<$t>().unwrap()
