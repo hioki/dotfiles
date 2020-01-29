@@ -243,6 +243,7 @@ alias ealacritty="$EDITOR ~/.config/alacritty/alacritty.yml"
 alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias fooe="$EDITOR ~/foo.txt"
 alias foo="cat ~/foo.txt"
+function foox() { cat ~/foo.txt | cargo run --bin $1 }
 alias ga='git add'
 alias gb='peco-checkout-branch'
 alias gbdelete='peco-branch-delete'
