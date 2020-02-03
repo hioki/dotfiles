@@ -1,10 +1,7 @@
 unmapAll
-
 set nosmoothscroll
-
 let barposition = "bottom"
 let locale = "jp"
-
 map j scrollDown
 map k scrollUp
 map gg scrollToTop
@@ -39,23 +36,26 @@ map gU goToRootUrl
 map gs :viewsource!<CR>
 map D :tabdetach<CR>
 map S :settings<CR>
-
 imap <C-k> deleteToEnd
 imap <C-h> deleteChar
 imap <C-w> deleteWord
-
 openOutdatedComment -> {{
   // Array.from(document.getElementsByClassName('outdated-comment')).forEach(l => l.classList.add('open'));
   Array.from(document.getElementsByClassName('show-outdated-button')).forEach(a => a.click());
 }}
-
 site 'https://github.com/*/*' {
   map O :call openOutdatedComment<CR>
 }
-
 yankLinkMarkdown -> {{
   var title = window.document.title.split(" by ", 2)[0].replace(/(<|>)/g, '\\$1')
   var LinkMarkdown = `[${title}](${window.location.href})`
   Clipboard.copy(LinkMarkdown);
   Status.setMessage(LinkMarkdown, 2);
 }}
+openServicesMenu -> {{
+  document.getElementById("nav-servicesMenu").click();
+}}
+site 'https://*.?console.aws.amazon.com/*/*' {
+  map t :call openServicesMenu<CR>
+}
+let blacklists = ["https://scrapbox.io/*","https://play.rust-lang.org/*"]
