@@ -32,6 +32,6 @@
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [ghq]
-  root = ~/.ghq
+  root = ~/ghq
 [url "git@github.com:"]
 	insteadOf = https://github.com/
