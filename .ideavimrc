@@ -11,6 +11,7 @@ set surround
 "
 " Normal-mode mappings
 "
+nnoremap gb :action Annotate<CR>
 nnoremap gc :action CommentByLineComment<CR>
 nnoremap gd :action ActivateVersionControlToolWindow<CR>
 nnoremap gh ^
