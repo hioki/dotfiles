@@ -1,8 +1,9 @@
 [atcoder]
 submit_via_binary = true
-update_interval = 1000
 use_cross = true
 binary_column = 80
+update_interval = 1000
+strip_path = "/usr/local/opt/binutils/bin/strip"
 
 [profile]
 target = "x86_64-unknown-linux-musl"
