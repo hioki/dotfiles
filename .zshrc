@@ -216,7 +216,6 @@ function gsnv() {
 }
 
 alias a="alias"
-alias be="bundle exec"
 alias c='clion .'
 alias ca='cargo'
 alias checkip='curl -s checkip.amazonaws.com'
@@ -229,7 +228,6 @@ alias dim="docker images"
 alias dc="docker-compose"
 alias dcs="docker-compose stop"
 alias dcu="docker-compose up -d"
-alias dbm="bin/rake db:migrate"
 alias dot="cd $(ghq root)/github.com/hioki-daichi/dotfiles"
 alias df="df -h"
 alias diff="colordiff"
@@ -239,7 +237,6 @@ alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relat
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias ealacritty="$EDITOR ~/.config/alacritty/alacritty.yml"
 alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias fooe="$EDITOR ~/foo.txt"
 alias foo="cat ~/foo.txt"
@@ -261,7 +258,6 @@ alias gdh='git diff --no-prefix --ignore-space-at-eol HEAD'
 alias gdhs='git diff --no-prefix --ignore-space-at-eol HEAD..stash@{0}'
 alias gempath="gem environment | grep -A 1 'GEM PATH' | tail -n 1 | tr -s ' ' | cut -d ' ' -f 3"
 alias gf='git fetch -p'
-alias gh='ghci'
 alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
 alias gm='git merge'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
@@ -271,7 +267,6 @@ alias gpof='git push --force-with-lease origin'
 alias gs='git show'
 alias gsn='git show --name-only'
 alias gsw='git show --ignore-space-change'
-alias gv='[ -e .git/index ] && nvim .git/index -c "Gitv --all" -c "tabonly" || echo .git/index not found: `pwd`'
 alias gas='git add . && git stash'
 alias gsp='git stash pop'
 alias gsc='git stash clear'
@@ -290,11 +285,7 @@ alias less="less -R"
 alias l="exa -ahl --git"
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias lsfullpath='find `pwd` -maxdepth 1'
-alias m="$EDITOR $HOME/Library/Mobile\ Documents/com\~apple\~CloudDocs/memo.md"
 alias nv="nvim"
-alias rs='bin/rails s'
-alias rc='bin/rails c'
-alias rd='bin/rails db -p'
 alias rgs='rg -E sjis'
 alias rm='trash'
 alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
@@ -321,34 +312,24 @@ alias Z='source ~/.zshrc'
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
 
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export EDITOR=nvim
 export CC=/usr/bin/gcc
 export PGDATA=/usr/local/var/postgres
 
+# Go
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
-export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
-
-export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
-export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-
-export PATH="$HOME/.anyenv/bin:$PATH"
-eval "$(anyenv init -)"
-eval "$(rbenv init - zsh)"
-eval "$(nodenv init -)"
-
-USER_BASE_PATH=$(python -m site --user-base)
-export PATH=$PATH:$USER_BASE_PATH/bin
-
-export PATH="/usr/local/opt/binutils/bin:$PATH"
 
 # Rust
 source $HOME/.cargo/env
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-eval "$(direnv hook zsh)"
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH="$HOME/.anyenv/bin:$PATH"
+export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
+export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="$PATH:$(python -m site --user-base)/bin"
+export PATH="$PATH:/usr/local/opt/binutils/bin"
 
 fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
@@ -357,56 +338,11 @@ fpath=($HOME/.zfunc $fpath)
 autoload -U compinit
 compinit -u
 
+eval "$(anyenv init -)"
+eval "$(rbenv init - zsh)"
+eval "$(nodenv init -)"
+eval "$(direnv hook zsh)"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
-
-function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
-function is_screen_running() { [ ! -z "$STY" ]; }
-function is_tmux_runnning() { [ ! -z "$TMUX" ]; }
-function is_screen_or_tmux_running() { is_screen_running || is_tmux_runnning; }
-function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
-function is_ssh_running() { [ ! -z "$SSH_CONECTION" ]; }
-function tmux_automatically_attach_session() {
-  if is_screen_or_tmux_running; then
-    ! is_exists 'tmux' && return 1
-
-    if is_tmux_runnning; then
-    elif is_screen_running; then
-      echo "This is on screen."
-    fi
-  else
-    if shell_has_started_interactively && ! is_ssh_running; then
-      if ! is_exists 'tmux'; then
-        echo 'Error: tmux command not found' 2>&1
-        return 1
-      fi
-
-      if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-        # detached session exists
-        tmux list-sessions
-        echo -n "Tmux: attach? (y/N/num) "
-        read
-        if [[ "$REPLY" =~ ^[Yy]$ ]] || [[ "$REPLY" == '' ]]; then
-          tmux attach-session
-          if [ $? -eq 0 ]; then
-            echo "$(tmux -V) attached session"
-            return 0
-          fi
-        elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-          tmux attach -t "$REPLY"
-          if [ $? -eq 0 ]; then
-            echo "$(tmux -V) attached session"
-            return 0
-          fi
-        fi
-      fi
-
-      if is_exists 'reattach-to-user-namespace'; then
-        tmux_config=$(cat $HOME/.tmux.conf <(echo 'set-option -g default-command "reattach-to-user-namespace -l $SHELL"'))
-        tmux -f <(echo "$tmux_config") new-session && echo "$(tmux -V) created new session supported OS X"
-      else
-        tmux new-session && echo "tmux created new session"
-      fi
-    fi
-  fi
-}
-tmux_automatically_attach_session
