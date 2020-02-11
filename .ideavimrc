@@ -25,12 +25,14 @@ nnoremap gof :action GotoFile<CR>
 nnoremap gos :action GotoSymbol<CR>
 nnoremap gr :action RenameElement<CR>
 nnoremap gs :action FileStructurePopup<CR>
+nnoremap gt :action Github.Open.In.Browser<CR>
 nnoremap gu :action FindUsages<CR>
 nnoremap gx :action ToggleLineBreakpoint<CR>
 nnoremap g<CR> mzA;<ESC>`z
 nnoremap g<Space> :action Run<CR>
 nnoremap g, :<C-u>edit ~/.ideavimrc<CR>
 nnoremap g. :<C-u>source ~/.ideavimrc<CR>
+
 
 nnoremap <CR>d :<C-u>close<CR>
 nnoremap <CR>v :action SplitVertically<CR>
