@@ -14,6 +14,7 @@ set surround
 nnoremap gb :action Annotate<CR>
 nnoremap gc :action CommentByLineComment<CR>
 nnoremap gd :action ActivateVersionControlToolWindow<CR>
+nnoremap ge :action Tool_External Tools_MacVim<CR>
 nnoremap gh ^
 nnoremap gi :action ShowIntentionActions<CR>
 nnoremap gk :action FindInPath<CR>
@@ -34,7 +35,6 @@ nnoremap g<Space> :action Run<CR>
 nnoremap g, :<C-u>edit ~/.ideavimrc<CR>
 nnoremap g. :<C-u>source ~/.ideavimrc<CR>
 
-
 nnoremap <CR>d :<C-u>close<CR>
 nnoremap <CR>v :action SplitVertically<CR>
 
@@ -44,6 +44,9 @@ nnoremap <C-j> :action SaveAll<CR>
 nnoremap <C-l> :action NextSplitter<CR>
 nnoremap <C-n> :action GotoNextError<CR>
 nnoremap <C-p> :action GotoPreviousError<CR>
+
+nnoremap <S-q> :action EditorToggleShowLineNumbers<CR>
+nnoremap <S-w> :action EditorToggleUseSoftWraps<CR>
 
 "
 " Insert-mode mappings
