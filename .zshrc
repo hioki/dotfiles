@@ -296,7 +296,7 @@ alias tf="terraform"
 alias tfp="terraform plan"
 alias tfa="terraform apply"
 alias u="popd"
-alias U="git commit -am 'Update'"
+alias U="git commit -am 'wip'"
 alias v="nvim"
 alias vk='nvim -c "au VimEnter * Denite -start-filter=1 -buffer-name=gtags_path gtags_path"'
 alias vshiftjis='nvim -c ":e ++enc=shift_jis"'
