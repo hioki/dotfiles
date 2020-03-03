@@ -379,6 +379,9 @@ export GOBIN=$GOPATH/bin
 # Rust
 source $HOME/.cargo/env
 
+# Python
+export PATH="$PATH:$HOME/Library/Python/3.7/bin"
+
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="$HOME/.anyenv/bin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
