@@ -273,6 +273,7 @@ SHELLSCRIPT
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
+alias caw='cargo watch -x'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
 alias d="docker"
