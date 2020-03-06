@@ -96,7 +96,7 @@ function peco-select-history() {
     bindkey '^r' peco-select-history
 
       function peco-checkout-branch() {
-        git checkout `git branch | peco | sed -e "s/\* //g" | awk "{print \$1}"`
+        git checkout $(git branch --format='%(refname:short)' | peco)
       }
 
     function peco-branch-delete() {
