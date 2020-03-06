@@ -1,5 +1,5 @@
 " Options
-set clipboard+=unnamed
+" set clipboard+=unnamed
 set nowrapscan
 set hlsearch
 set incsearch
