@@ -131,7 +131,15 @@ function rr() {
 }
 
 function rv() {
-  nvim $(rg -n "$@" | peco --query "$LBUFFER" | awk -F : '{print "-c " $2 " " $1}')
+  hits=$(rg -n "$@")
+  if [ $? -eq 1 ]; then
+    echo "Nothing"
+    return
+  fi
+  line=$(echo $hits | peco --query "$LBUFFER")
+  filename=$(echo $line | cut -d ':' -f 1)
+  linenumber=$(echo $line | cut -d ':' -f 2)
+  nvim -c $linenumber $filename
 }
 
 function p() {
@@ -314,6 +322,7 @@ alias gdh='git diff --no-prefix --ignore-space-at-eol HEAD'
 alias gdhs='git diff --no-prefix --ignore-space-at-eol HEAD..stash@{0}'
 alias gempath="gem environment | grep -A 1 'GEM PATH' | tail -n 1 | tr -s ' ' | cut -d ' ' -f 3"
 alias gf='git fetch -p'
+alias gg='ghq get'
 alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
 alias gm='git merge'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
@@ -389,6 +398,7 @@ export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH="$PATH:$(python -m site --user-base)/bin"
 export PATH="$PATH:/usr/local/opt/binutils/bin"
+export PATH="$PATH:$HOME/bin"
 
 fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
