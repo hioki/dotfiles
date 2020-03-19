@@ -1,0 +1,26 @@
+"*":
+  core:
+    audioBeep: false
+    ignoredNames: [
+      ".git"
+      ".hg"
+      ".svn"
+      ".DS_Store"
+      "._*"
+      "Thumbs.db"
+      "desktop.ini"
+      ".idea"
+    ]
+    restorePreviousWindowsOnStart: "always"
+    telemetryConsent: "no"
+  editor:
+    fontSize: 13
+    lineHeight: 1.35
+    preferredLineLength: 120
+  elmjutsu: {}
+  "exception-reporting":
+    userId: "37fa22bd-4e6c-4e4b-931d-5e594ac77835"
+  "language-elm":
+    autocompleteEnabled: false
+  welcome:
+    showOnStartup: false
