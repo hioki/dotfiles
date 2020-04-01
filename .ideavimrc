@@ -19,6 +19,8 @@ nnoremap gh ^
 nnoremap gi :action ShowIntentionActions<CR>
 nnoremap gk :action FindInPath<CR>
 nnoremap gl $
+nnoremap gm :action ToggleBookmark<CR>
+nnoremap gM :action ShowBookmarks<CR>
 nnoremap goa :action GotoAction<CR>
 nnoremap goc :action GotoClass<CR>
 nnoremap goe :action SearchEverywhere<CR>
@@ -40,10 +42,7 @@ nnoremap <CR>v :action SplitVertically<CR>
 
 nnoremap <ESC><ESC> :<C-u>nohlsearch<CR>
 
-nnoremap <C-j> :action SaveAll<CR>
 nnoremap <C-l> :action NextSplitter<CR>
-nnoremap <C-n> :action GotoNextError<CR>
-nnoremap <C-p> :action GotoPreviousError<CR>
 
 nnoremap <S-q> :action EditorToggleShowLineNumbers<CR>
 nnoremap <S-w> :action EditorToggleUseSoftWraps<CR>
