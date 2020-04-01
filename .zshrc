@@ -389,14 +389,13 @@ export GOBIN=$GOPATH/bin
 source $HOME/.cargo/env
 
 # Python
-export PATH="$PATH:$HOME/Library/Python/3.7/bin"
+export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="$HOME/.anyenv/bin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH="$PATH:$(python -m site --user-base)/bin"
 export PATH="$PATH:/usr/local/opt/binutils/bin"
 export PATH="$PATH:$HOME/bin"
 
