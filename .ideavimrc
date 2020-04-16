@@ -44,8 +44,8 @@ nnoremap <ESC><ESC> :<C-u>nohlsearch<CR>
 
 nnoremap <C-l> :action NextSplitter<CR>
 
-nnoremap <S-q> :action EditorToggleShowLineNumbers<CR>
-nnoremap <S-w> :action EditorToggleUseSoftWraps<CR>
+nnoremap Q :action EditorToggleShowLineNumbers<CR>
+nnoremap W :action EditorToggleUseSoftWraps<CR>
 
 "
 " Insert-mode mappings
