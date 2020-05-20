@@ -3,6 +3,9 @@ SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
 [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
   PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
 
+alias ls="exa"
+alias l="exa -ahl --git"
+alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias rm='trash'
 
 export PATH="$HOME/.anyenv/bin:$PATH"
