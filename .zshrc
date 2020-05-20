@@ -4,10 +4,6 @@ export LANG=ja_JP.UTF-8
 
 autoload colors
 colors
-PROMPT="%(?.%F{blue}.%F{red})[%n@%m %~]$ %f"
-SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
-[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-  PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
 
 setopt auto_cd
 setopt auto_pushd
@@ -292,7 +288,6 @@ alias dim="docker images"
 alias dc="docker-compose"
 alias dcs="docker-compose stop"
 alias dcu="docker-compose up -d"
-alias dot="cd $(ghq root)/github.com/hioki-daichi/dotfiles"
 alias df="df -h"
 alias diff="colordiff"
 alias dstatall='dstat -tclmdr'
@@ -391,25 +386,16 @@ source $HOME/.cargo/env
 export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-export PATH="$HOME/.anyenv/bin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH="$PATH:/usr/local/opt/binutils/bin"
 export PATH="$PATH:$HOME/bin"
 
-fpath=($(brew --prefix)/share/zsh-completions $fpath)
-fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
-fpath=($HOME/.zfunc $fpath)
-
 autoload -U compinit
 compinit -u
-
-eval "$(anyenv init -)"
-eval "$(rbenv init - zsh)"
-eval "$(nodenv init -)"
-eval "$(direnv hook zsh)"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
+[ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`

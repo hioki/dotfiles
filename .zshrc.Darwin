@@ -1,0 +1,17 @@
+PROMPT="%(?.%F{blue}.%F{red})[%n@%m %~]$ %f"
+SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
+[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+  PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
+
+alias rm='trash'
+
+export PATH="$HOME/.anyenv/bin:$PATH"
+
+fpath=($(brew --prefix)/share/zsh-completions $fpath)
+fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+fpath=($HOME/.zfunc $fpath)
+
+eval "$(anyenv init -)"
+eval "$(rbenv init - zsh)"
+eval "$(nodenv init -)"
+eval "$(direnv hook zsh)"
