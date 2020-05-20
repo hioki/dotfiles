@@ -352,7 +352,6 @@ alias la="gls -lta --human-readable --no-group --classify --color --group-direct
 alias lsfullpath='find `pwd` -maxdepth 1'
 alias nv="nvim"
 alias rgs='rg -E sjis'
-alias rm='trash'
 alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
 alias s='spt' # spotify-tui
 alias sl='l'
