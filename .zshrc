@@ -396,5 +396,7 @@ compinit -u
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+test -e "${HOME}/.rsyncignore" && alias rsync="rsync --exclude-from ${HOME}/.rsyncignore"
+
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
