@@ -6,3 +6,5 @@ export LANG=en_US.UTF-8
 export LC_TYPE=en_US.UTF-8
 
 export PATH="$PATH:/usr/local/go/bin"
+export PKG_CONFIG_PATH="/usr/lib/arm-linux-gnueabihf/pkgconfig"
+export LIBCLANG_INCLUDE_PATH="/usr/include/clang/7/include"
