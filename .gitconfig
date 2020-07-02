@@ -11,7 +11,6 @@
 	tool = vimdiff
 [merge]
 	tool = fugitive
-  conflictStyle = diff3
 [mergetool]
 	prompt = false
 [init]
@@ -35,3 +34,5 @@
   root = ~/ghq
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[pull]
+	rebase = false
