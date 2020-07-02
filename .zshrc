@@ -366,6 +366,7 @@ alias V="nvim -R -"
 alias w1='watch --interval 1'
 alias xmllint='xmllint --format --encode utf-8'
 alias z='nvim ~/.zshrc'
+alias zl='nvim ~/.zshrc.local'
 alias Z='source ~/.zshrc'
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
