@@ -17,6 +17,5 @@ fpath=($HOME/.zfunc $fpath)
 eval "$(anyenv init -)"
 eval "$(rbenv init - zsh)"
 eval "$(nodenv init -)"
-eval "$(direnv hook zsh)"
 
 export PATH="$(pyenv root)/shims:$PATH"
