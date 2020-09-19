@@ -296,7 +296,8 @@ alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relat
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias f='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
+alias f='vim $(fzf)'
+alias F='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias fooe="$EDITOR ~/foo.txt"
 alias foo="cat ~/foo.txt"
 function foox() { cat ~/foo.txt | cargo run --bin $1 }
