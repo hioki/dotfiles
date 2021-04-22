@@ -67,3 +67,7 @@ vnoremap gc :action CommentByLineComment<CR>
 nmap <Tab> %
 vmap <Tab> %
 vmap m %
+
+" Search
+nnoremap * yiw/<C-r>0<CR>
+vnoremap * y/<C-r>0<CR>
