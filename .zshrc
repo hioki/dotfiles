@@ -219,6 +219,30 @@ function gsnv() {
   ruby -e 'prefix = `git rev-parse --show-cdup`.chomp; files = `git show --pretty="" --name-only`.split.map { |s| prefix + s }.join(" "); system("nvim #{files}")'
 }
 
+local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
+local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
+
+update_local_hostnames_cache() {
+  type ip >/dev/null || return
+  type ggrep >/dev/null || return
+  nmap -sP -R $(ip addr | ggrep -oP '(?<=inet )192\.168\.[^ ]+(?=)' | head -n1) \
+    | ggrep --only-matching --perl-regexp '(?<=Nmap scan report for )[^\.]+(?=\.lan)' \
+    | sort \
+    | uniq \
+    > "$LOCAL_HOSTNAMES_CACHE"
+}
+
+ssh_local_hostnames_cache() {
+  local selected_host=$(cat "$LOCAL_HOSTNAMES_CACHE" | peco --query "$LBUFFER")
+  if [ -n "$selected_host" ]; then
+    BUFFER="ssh pi@${selected_host}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N ssh_local_hostnames_cache
+bindkey '^]' ssh_local_hostnames_cache
+
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
