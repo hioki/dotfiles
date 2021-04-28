@@ -123,11 +123,11 @@ bindkey "^o" back-to-previous-edit
 
 function rr() {
   clear
-  rg -p -C 5 "$@" | less -FRSX
+  rg --hidden -p -C 5 "$@" | less -FRSX
 }
 
 function rv() {
-  hits=$(rg -n "$@")
+  hits=$(rg --hidden -n "$@")
   if [ $? -eq 1 ]; then
     echo "Nothing"
     return
