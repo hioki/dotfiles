@@ -373,3 +373,5 @@ eval "$(direnv hook zsh)"
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
+
+export PATH="$HOME/.poetry/bin:$PATH"

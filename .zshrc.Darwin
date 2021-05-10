@@ -19,3 +19,6 @@ eval "$(rbenv init - zsh)"
 eval "$(nodenv init -)"
 
 export PATH="$(pyenv root)/shims:$PATH"
+
+autoload -U compinit
+compinit -u
