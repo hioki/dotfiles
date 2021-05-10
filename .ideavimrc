@@ -69,7 +69,7 @@ vmap <Tab> %
 vmap m %
 
 " Search
-nnoremap * yiw?<C-r>0<CR>/<CR>
-vnoremap * y?<C-r>0<CR>/<CR>
+nnoremap * mzyiw?<C-r>0<CR>/<CR>`z
+vnoremap * <ESC>mzgvy?<C-r>0<CR>/<CR>`z
 nnoremap n /<CR>
 nnoremap <S-n> ?<CR>
