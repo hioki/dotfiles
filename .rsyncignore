@@ -2,3 +2,6 @@
 .venv/
 target/
 test/
+.mypy_cache/
+.git/
+.pytest_cache
