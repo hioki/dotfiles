@@ -5,3 +5,4 @@ test/
 .mypy_cache/
 .git/
 .pytest_cache
+__pycache__/
