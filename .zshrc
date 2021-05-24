@@ -371,7 +371,15 @@ test -e "${HOME}/.rsyncignore" && alias rsync="rsync --exclude-from ${HOME}/.rsy
 
 eval "$(direnv hook zsh)"
 
-[ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
-[ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
 
 export PATH="$HOME/.poetry/bin:$PATH"
+
+export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+[ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
+[ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
