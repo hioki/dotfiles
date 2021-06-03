@@ -243,6 +243,16 @@ ssh_local_hostnames_cache() {
 zle -N ssh_local_hostnames_cache
 bindkey '^]' ssh_local_hostnames_cache
 
+ssh() {
+  if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
+    tmux rename-window ${@: -1}
+    command ssh "$@"
+    tmux set-window-option automatic-rename "on" 1>/dev/null
+  else
+    command ssh "$@"
+  fi
+}
+
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
