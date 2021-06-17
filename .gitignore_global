@@ -9,7 +9,7 @@
 /coverage/
 /hscope.out
 /tags
-/venv/
+venv/
 GPATH
 GRTAGS
 GTAGS
