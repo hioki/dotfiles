@@ -382,6 +382,7 @@ export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 export PATH="$PATH:/usr/local/opt/binutils/bin"
 export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 autoload -U compinit
 compinit -u
