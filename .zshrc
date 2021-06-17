@@ -264,6 +264,13 @@ select_and_load_tmuxp_setting() {
 zle -N select_and_load_tmuxp_setting
 bindkey '^\' select_and_load_tmuxp_setting
 
+edit_tmuxp_setting() {
+  local selected=$(find ~/.config/tmuxp/*.yaml | peco --query "$LBUFFER")
+  if [ -n "${selected}" ]; then
+    ${EDITOR} ${selected}
+  fi
+}
+
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
