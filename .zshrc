@@ -253,6 +253,17 @@ ssh() {
   fi
 }
 
+select_and_load_tmuxp_setting() {
+  local selected=$(find ~/.config/tmuxp/*.yaml | peco --query "$LBUFFER")
+  if [ -n "${selected}" ]; then
+    BUFFER="tmuxp load ${selected}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N select_and_load_tmuxp_setting
+bindkey '^\' select_and_load_tmuxp_setting
+
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
