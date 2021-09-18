@@ -222,7 +222,7 @@ function gsnv() {
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
 local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
-update_local_hostnames_cache() {
+recache_local_hostnames() {
   type ip >/dev/null || return
   type ggrep >/dev/null || return
   nmap -sP -R $(ip addr | ggrep -oP '(?<=inet )192\.168\.[^ ]+(?=)' | head -n1) \
@@ -263,6 +263,23 @@ select_and_load_tmuxp_setting() {
 }
 zle -N select_and_load_tmuxp_setting
 bindkey '^\' select_and_load_tmuxp_setting
+
+work_repo() {
+  # WORK_REPO=$(cat <<EOS
+  # <name>\t<path>
+  # ....
+  # EOS
+  # )
+  local selected=$(echo $WORK_REPO | peco --query "$LBUFFER")
+  if [ -n "${selected}" ]; then
+    local repo=$(echo ${selected} | cut -f2)
+    BUFFER="cd ${repo}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N work_repo
+bindkey '^j' work_repo
 
 edit_tmuxp_setting() {
   local selected=$(find ~/.config/tmuxp/*.yaml | peco --query "$LBUFFER")
@@ -323,6 +340,7 @@ alias gpr='git remote prune origin'
 alias gpo='git push origin'
 alias gpof='git push --force-with-lease origin'
 alias gs='git show'
+alias gsm='git submodule'
 alias gsn='git show --name-only'
 alias gsw='git show --ignore-space-change'
 alias gas='git add . && git stash'
@@ -366,6 +384,7 @@ alias xmllint='xmllint --format --encode utf-8'
 alias z='nvim ~/.zshrc'
 alias zl='nvim ~/.zshrc.local'
 alias Z='source ~/.zshrc'
+alias ZL='source ~/.zshrc.local'
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
 
