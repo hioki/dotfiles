@@ -15,3 +15,4 @@ GRTAGS
 GTAGS
 __pycache__/
 ignore/
+/.actdk/cache
