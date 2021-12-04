@@ -36,3 +36,5 @@
 	insteadOf = https://github.com/
 [pull]
 	rebase = false
+[log]
+	follow = true
