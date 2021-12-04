@@ -17,12 +17,16 @@
     fontSize: 13
     lineHeight: 1.35
     preferredLineLength: 120
-  elmjutsu: {}
+  elmjutsu:
+    inferExpectedTypeAtCursorOnTheFly: true
+    inferTypeOfSelectionOnTheFly: true
+    reportWarnings: true
+    showTypesInTooltip: true
+    typeAwareAutocompleteEnabled: true
   "exception-reporting":
     userId: "37fa22bd-4e6c-4e4b-931d-5e594ac77835"
   "language-elm":
     autocompleteEnabled: false
-  "tree-view":
-    hideVcsIgnoredFiles: true
+  "tree-view": {}
   welcome:
     showOnStartup: false
