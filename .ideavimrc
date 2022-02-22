@@ -20,6 +20,7 @@ nnoremap gi :action ShowIntentionActions<CR>
 nnoremap gk :action FindInPath<CR>
 nnoremap gl $
 nnoremap gm :action ToggleBookmark<CR>
+nnoremap gn :<C-u>nohlsearch<CR>
 nnoremap gM :action ShowBookmarks<CR>
 nnoremap goa :action GotoAction<CR>
 nnoremap goc :action GotoClass<CR>
@@ -39,8 +40,6 @@ nnoremap g. :<C-u>source ~/.ideavimrc<CR>
 
 nnoremap <CR>d :<C-u>close<CR>
 nnoremap <CR>v :action SplitVertically<CR>
-
-nnoremap <ESC><ESC> :<C-u>nohlsearch<CR>
 
 nnoremap <C-l> :action NextSplitter<CR>
 
