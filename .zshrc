@@ -123,7 +123,7 @@ bindkey "^o" back-to-previous-edit
 
 function rr() {
   clear
-  rg --hidden -p -C 5 "$@" | less -FRSX
+  rg --fixed-strings --hidden -p -C 5 "$@" | less -FRSX
 }
 
 function rv() {
@@ -243,6 +243,17 @@ ssh_local_hostnames_cache() {
 zle -N ssh_local_hostnames_cache
 bindkey '^]' ssh_local_hostnames_cache
 
+# ssh_local_domains() {
+#   local selected_host=$(echo "$LOCAL_DOMAINS" | peco --query "$LBUFFER")
+#   if [ -n "$selected_host" ]; then
+#     BUFFER="ssh ${selected_host}"
+#     zle accept-line
+#   fi
+#   zle clear-screen
+# }
+# zle -N ssh_local_domains
+# bindkey '^]' ssh_local_domains
+
 ssh() {
   if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
     tmux rename-window ${@: -1}
@@ -291,9 +302,11 @@ edit_tmuxp_setting() {
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
-alias caw='cargo watch -x'
+alias cr='cargo run --quiet'
+alias cb='cargo watch -x build'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
+alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hioki/karabiner-json-updater/personal_rules.json\" | sort | peco"
 alias d="docker"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
@@ -351,6 +364,7 @@ alias gcanceladd='git reset HEAD'
 alias gt='gtree'
 alias goreautoimport='gore -autoimport'
 alias gho="gh repo view --web"
+alias gr="gh run view --web"
 alias h='cd ..'
 alias hh='cd ../..'
 alias hhh='cd ../../..'

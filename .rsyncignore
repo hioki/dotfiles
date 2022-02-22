@@ -1,9 +1,10 @@
 .idea/
 .venv/
 target/
-test/
 .mypy_cache/
-.git/
+#.git/
 .pytest_cache
 __pycache__/
 htmlcov/
+.DS_Store
+**/*.bk
