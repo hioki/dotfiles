@@ -1,6 +1,6 @@
 #!/bin/sh
 
-COMMAND_TYPE=push
+COMMAND_TYPE=commit
 TARGET_BRANCHES="main master develop staging production"
 
 current_branch="$(git symbolic-ref HEAD 2>/dev/null | sed -e 's/refs\/heads\///g')" || \
