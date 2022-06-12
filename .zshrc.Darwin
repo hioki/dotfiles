@@ -8,6 +8,8 @@ export DYLD_LIBRARY_PATH="/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH"
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias rm='trash'
 alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hioki/karabiner-json-updater/personal_rules.json\" | sort | peco"
+alias ls="exa"
+alias l="exa -ahl --git"
 
 fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
