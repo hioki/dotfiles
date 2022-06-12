@@ -2,9 +2,10 @@
 .venv/
 target/
 .mypy_cache/
-#.git/
+.git/
 .pytest_cache
 __pycache__/
 htmlcov/
 .DS_Store
 **/*.bk
+node_modules/
