@@ -235,13 +235,20 @@ recache_local_hostnames() {
 ssh_local_hostnames_cache() {
   local selected_host=$(cat "$LOCAL_HOSTNAMES_CACHE" | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
-    BUFFER="ssh pi@${selected_host}"
+    ssh root@${selected_host}
+  fi
+}
+
+ssh_st_prefixed_host() {
+  local selected_host=$(grep -oP '(?<=^Host )st.*' ~/.ssh/config | peco --query "$LBUFFER")
+  if [ -n "$selected_host" ]; then
+    BUFFER="ssh root@${selected_host}"
     zle accept-line
   fi
   zle clear-screen
 }
-zle -N ssh_local_hostnames_cache
-bindkey '^]' ssh_local_hostnames_cache
+zle -N ssh_st_prefixed_host
+bindkey '^]' ssh_st_prefixed_host
 
 # ssh_local_domains() {
 #   local selected_host=$(echo "$LOCAL_DOMAINS" | peco --query "$LBUFFER")
@@ -414,7 +421,7 @@ export GOBIN=$GOPATH/bin
 source $HOME/.cargo/env
 
 # Python
-export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
+#export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
 
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
@@ -435,6 +442,9 @@ eval "$(direnv hook zsh)"
 
 
 export PATH="$HOME/.poetry/bin:$PATH"
+
+export PATH="$HOME/.anyenv/bin:$PATH"
+eval "$(anyenv init -)"
 
 export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
