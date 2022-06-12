@@ -313,7 +313,6 @@ alias cr='cargo run --quiet'
 alias cb='cargo watch -x build'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
-alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hioki/karabiner-json-updater/personal_rules.json\" | sort | peco"
 alias d="docker"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
