@@ -435,7 +435,9 @@ export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 
 # Rust
-source $HOME/.cargo/env
+if [ -f $HOME/.cargo/env ]; then
+  source $HOME/.cargo/env
+fi
 
 # Python
 #export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
