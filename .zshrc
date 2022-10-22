@@ -219,6 +219,11 @@ function gsnv() {
   ruby -e 'prefix = `git rev-parse --show-cdup`.chomp; files = `git show --pretty="" --name-only`.split.map { |s| prefix + s }.join(" "); system("nvim #{files}")'
 }
 
+function fmten() {
+  pbpaste | tr '\n' ' ' | sed -e 's/  / /g' -e 's/^ //' -e 's/\. /\.\n\n/g' | pbcopy
+  pbpaste
+}
+
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
 local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
@@ -306,6 +311,14 @@ edit_tmuxp_setting() {
   fi
 }
 
+ghw () {
+  set -e
+  workflow_file="$(find "$(git rev-parse --show-toplevel)/.github/workflows" -type f -name "*.yml" -print0 | xargs -0 basename | peco)"
+  gh workflow run "${workflow_file}" $@
+  sleep 2
+  open $(gh run list --workflow="${workflow_file}" -L 1 --json url --jq '.[].url')
+}
+
 alias a="alias"
 alias c='clion .'
 alias ca='cargo'
@@ -382,6 +395,7 @@ alias nv="nvim"
 alias rgs='rg -E sjis'
 alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
 alias s='spt' # spotify-tui
+alias sed='gsed'
 alias sl='l'
 alias t="tree -I vendor -I node_modules -I target -I __pycache__"
 alias tf="terraform"
