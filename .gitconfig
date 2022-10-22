@@ -13,7 +13,7 @@
 	prompt = false
 [init]
   templatedir = ~/.git_template
-	defaultBranch = develop
+	defaultBranch = main
 [pager]
 	log = diff-highlight | less
 	show = diff-highlight | less
