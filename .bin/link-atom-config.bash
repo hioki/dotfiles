@@ -11,6 +11,6 @@ case "$yn" in
     ;;
 esac
 
-ln -s $(pwd)/.atom/* $HOME/.atom/
+ln -s "$(pwd)"/.atom/* "$HOME/.atom/"
 
 echo "done."
