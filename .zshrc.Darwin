@@ -11,11 +11,15 @@ alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hio
 alias ls="exa"
 alias l="exa -ahl --git"
 
+function notify_done() { osascript -e 'display notification "done"' }
+
+export PATH="$PATH:/usr/local/opt/mosquitto/sbin:/usr/local/opt/mosquitto/bin"
+
 fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
 fpath=($HOME/.zfunc $fpath)
 
-eval "$(rbenv init - zsh)"
+# eval "$(rbenv init - zsh)"
 eval "$(nodenv init -)"
 
 autoload -U compinit
