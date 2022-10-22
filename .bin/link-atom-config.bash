@@ -11,6 +11,7 @@ case "$yn" in
     ;;
 esac
 
+mkdir -p "$HOME/.atom"
 ln -s "$(pwd)"/.atom/* "$HOME/.atom/"
 
 echo "done."
