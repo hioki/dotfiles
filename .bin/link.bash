@@ -14,7 +14,7 @@ for dotfile in "${dotfiles[@]}"; do
 done
 echo "--------------------------------------------------------------------------------"
 
-read -r -p "(y/N): " yn
+read -r -p "[Y/n]: " yn
 case "$yn" in
 [yY]*) ;;
 *)
