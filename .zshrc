@@ -463,12 +463,13 @@ eval "$(direnv hook zsh)"
 export PATH="$HOME/.poetry/bin:$PATH"
 
 export PATH="$HOME/.anyenv/bin:$PATH"
-eval "$(anyenv init -)"
+if command -v anyenv > /dev/null; then
+  eval "$(anyenv init -)"
+fi
 
 export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-if command -v pyenv 1>/dev/null 2>&1; then
+if command -v pyenv > /dev/null; then
   eval "$(pyenv init -)"
 fi
 
