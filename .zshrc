@@ -200,7 +200,13 @@ function rg_with_head() {
   done
 }
 
-function chpwd() { exa }
+function chpwd() {
+  if command -v exa > /dev/null; then
+    exa
+  else
+    ls
+  fi
+}
 
 function install-rust-devtools {
   rustup component add \
