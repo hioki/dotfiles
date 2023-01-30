@@ -31,8 +31,8 @@
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [ghq]
   root = ~/ghq
-[url "git@github.com:"]
-	insteadOf = https://github.com/
+# [url "git@github.com:"]
+# 	insteadOf = https://github.com/
 [pull]
 	rebase = false
 [log]
