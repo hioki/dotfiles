@@ -7,7 +7,7 @@ colors
 
 setopt auto_cd
 setopt auto_pushd
-setopt correct
+# setopt correct
 setopt list_packed
 setopt noautoremoveslash
 setopt nolistbeep
@@ -230,6 +230,17 @@ function fmten() {
   pbpaste
 }
 
+function aws_set_account() {
+  AWS_VAULT_SHELL=1 aws-vault exec $1 -- $SHELL
+}
+
+function aws_unset_account() {
+  if [ $AWS_VAULT_SHELL ]; then
+    unset AWS_VAULT_SHELL
+    exit 0
+  fi
+}
+
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
 local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
@@ -332,6 +343,8 @@ alias cr='cargo run --quiet'
 alias cb='cargo watch -x build'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
+alias CD="pbcopy && cd $(pbpaste)"
+alias cov="cargo llvm-cov test --html --open"
 alias d="docker"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
@@ -403,7 +416,7 @@ alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/ru
 alias s='spt' # spotify-tui
 alias sed='gsed'
 alias sl='l'
-alias t="tree -I vendor -I node_modules -I target -I __pycache__"
+alias t="tree -I 'vendor|node_modules|target|__pycache__'"
 alias tf="terraform"
 alias tfp="terraform plan"
 alias tfa="terraform apply"
