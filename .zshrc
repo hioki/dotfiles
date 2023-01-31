@@ -343,7 +343,6 @@ alias cr='cargo run --quiet'
 alias cb='cargo watch -x build'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
-alias CD="pbcopy && cd $(pbpaste)"
 alias cov="cargo llvm-cov test --html --open"
 alias d="docker"
 alias dps="docker ps -a"
