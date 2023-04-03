@@ -12,6 +12,7 @@ alias ls="exa"
 alias l="exa -ahl --git"
 
 function notify_done() { osascript -e 'display notification "done"' }
+function PV() { pbpaste | nvim -R - }
 
 export PATH="$PATH:/usr/local/opt/mosquitto/sbin:/usr/local/opt/mosquitto/bin"
 
