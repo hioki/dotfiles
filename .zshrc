@@ -246,9 +246,9 @@ local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
 recache_local_hostnames() {
   type ip >/dev/null || return
-  type ggrep >/dev/null || return
-  nmap -sP -R $(ip addr | ggrep -oP '(?<=inet )192\.168\.[^ ]+(?=)' | head -n1) \
-    | ggrep --only-matching --perl-regexp '(?<=Nmap scan report for )[^\.]+(?=\.lan)' \
+  type grep >/dev/null || return
+  nmap -sP -R $(ip addr | grep -oP '(?<=inet )192\.168\.[^ ]+(?=)' | head -n1) \
+    | grep --only-matching --perl-regexp '(?<=Nmap scan report for )[^\.]+(?=\.lan)' \
     | sort \
     | uniq \
     > "$LOCAL_HOSTNAMES_CACHE"
@@ -262,7 +262,7 @@ ssh_local_hostnames_cache() {
 }
 
 ssh_st_prefixed_host() {
-  local selected_host=$(grep -oP '(?<=^Host )st.*' ~/.ssh/config | peco --query "$LBUFFER")
+  local selected_host=$(grep -oP '(?<=^Host )st-.*' ~/.ssh/config.d/idein | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
     BUFFER="ssh root@${selected_host}"
     zle accept-line

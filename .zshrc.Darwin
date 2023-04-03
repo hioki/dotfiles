@@ -10,6 +10,8 @@ alias rm='trash'
 alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hioki/karabiner-json-updater/personal_rules.json\" | sort | peco"
 alias ls="exa"
 alias l="exa -ahl --git"
+alias grep="ggrep"
+alias awk="gawk"
 
 function notify_done() { osascript -e 'display notification "done"' }
 function PV() { pbpaste | nvim -R - }
