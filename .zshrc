@@ -454,6 +454,9 @@ fi
 # Python
 #export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
 
+# Ruby
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
@@ -484,6 +487,8 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv > /dev/null; then
   eval "$(pyenv init -)"
 fi
+
+export PATH="/opt/homebrew:$PATH"
 
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 
