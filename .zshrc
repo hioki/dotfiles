@@ -49,10 +49,6 @@ function pshort() {
   PROMPT="%(?.%F{green}.%F{red})$ %f"
 }
 
-function pdefault() {
-  PROMPT="%(?.%F{cyan}.%F{red})[${USER}@${HOST}] %~ $ %f"
-}
-
 function o(){
   open "${1:-.}"
 }
@@ -241,6 +237,14 @@ function aws_unset_account() {
   fi
 }
 
+function awsenv() {
+  if [[ ! -z $AWS_VAULT ]]; then
+    unset AWS_VAULT
+  fi
+  local env=$(grep -oP '(?<=^\[profile ).*(?=])' ~/.aws/config | peco --query "$LBUFFER")
+  AWS_VAULT_SHELL=1 aws-vault exec $env -- $SHELL
+}
+
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
 local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
@@ -413,7 +417,7 @@ alias nv="nvim"
 alias rgs='rg -E sjis'
 alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
 alias s='spt' # spotify-tui
-alias sed='gsed'
+# alias sed='gsed'
 alias sl='l'
 alias t="tree -I 'vendor|node_modules|target|__pycache__'"
 alias tf="terraform"
@@ -429,6 +433,7 @@ alias vim="nvim"
 alias vsm="nvim src/main.rs"
 alias vcargo="nvim ./Cargo.toml"
 alias V="nvim -R -"
+alias VV="jq . | nvim -R - -c 'set filetype=json'"
 alias w1='watch --interval 1'
 alias xmllint='xmllint --format --encode utf-8'
 alias z='nvim ~/.zshrc'
@@ -461,7 +466,8 @@ export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-export PATH="$PATH:/usr/local/opt/binutils/bin"
+export PATH="/usr/local/opt/binutils/bin:$PATH"
+export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/.local/bin"
 
@@ -490,7 +496,16 @@ fi
 
 export PATH="/opt/homebrew:$PATH"
 
+for d in /opt/homebrew/opt/*/libexec/gnubin; do
+  export PATH=$d:$PATH
+done
+
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
+
+# for pyenv
+export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig /opt/homebrew/opt/ncurses/lib/pkgconfig"
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`

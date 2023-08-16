@@ -3,6 +3,13 @@ SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
 [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
   PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
 
+function update_prompt_for_aws_vault() {
+  if [[ ! -z $AWS_VAULT_SHELL  ]]; then
+    PROMPT="($AWS_VAULT) $PROMPT"
+  fi
+}
+update_prompt_for_aws_vault
+
 export DYLD_LIBRARY_PATH="/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH"
 
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
