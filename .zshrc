@@ -267,6 +267,17 @@ ssh_local_hostnames_cache() {
   fi
 }
 
+sshpeco() {
+  local host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | peco --query "$LBUFFER")
+  if [ -n "$host" ]; then
+    BUFFER="ssh ${host}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N sshpeco
+bindkey '^[' sshpeco
+
 ssh_st_prefixed_host() {
   local selected_host=$(grep -oP '(?<=^Host )st-.*' ~/.ssh/config.d/idein | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
@@ -276,18 +287,8 @@ ssh_st_prefixed_host() {
   zle clear-screen
 }
 zle -N ssh_st_prefixed_host
-bindkey '^]' ssh_st_prefixed_host
 
-# ssh_local_domains() {
-#   local selected_host=$(echo "$LOCAL_DOMAINS" | peco --query "$LBUFFER")
-#   if [ -n "$selected_host" ]; then
-#     BUFFER="ssh ${selected_host}"
-#     zle accept-line
-#   fi
-#   zle clear-screen
-# }
-# zle -N ssh_local_domains
-# bindkey '^]' ssh_local_domains
+bindkey '^]' ssh_st_prefixed_host
 
 ssh() {
   if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
