@@ -1,8 +1,8 @@
 TERM='screen-256color'
 
-export LC_ALL=ja_JP.UTF-8
-export LANG=ja_JP.UTF-8
-export LANGUAGE=ja_JP.UTF-8
+# export LC_ALL=ja_JP.UTF-8
+# export LANG=ja_JP.UTF-8
+# export LANGUAGE=ja_JP.UTF-8
 
 autoload colors
 colors
@@ -392,9 +392,7 @@ alias gg='ghq get'
 alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
 alias gm='git merge'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
-alias gpr='git remote prune origin'
-alias gpo='git push origin'
-alias gpof='git push --force-with-lease origin'
+alias gpull='git pull'
 alias gs='git show'
 alias gsm='git submodule'
 alias gsn='git show --name-only'

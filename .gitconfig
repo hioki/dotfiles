@@ -22,17 +22,10 @@
 	diffFilter = diff-highlight
 [rebase]
 	autosquash = true
-# [filter "lfs"]
-# 	clean = git-lfs clean -- %f
-# 	smudge = git-lfs smudge -- %f
-# 	process = git-lfs filter-process
-# 	required = true
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [ghq]
   root = ~/ghq
-# [url "git@github.com:"]
-# 	insteadOf = https://github.com/
 [pull]
 	rebase = false
 [log]
@@ -42,3 +35,5 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+[push]
+	default = current
