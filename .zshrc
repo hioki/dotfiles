@@ -278,10 +278,19 @@ sshpeco() {
 zle -N sshpeco
 bindkey '^[' sshpeco
 
+# ssh_st_prefixed_host() {
+#   local selected_host=$(grep -oP '(?<=^Host )st-.*' ~/.ssh/config.d/idein | peco --query "$LBUFFER")
+#   if [ -n "$selected_host" ]; then
+#     BUFFER="ssh root@${selected_host}"
+#     zle accept-line
+#   fi
+#   zle clear-screen
+# }
+# zle -N ssh_st_prefixed_host
 ssh_st_prefixed_host() {
-  local selected_host=$(grep -oP '(?<=^Host )st-.*' ~/.ssh/config.d/idein | peco --query "$LBUFFER")
+  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
-    BUFFER="ssh root@${selected_host}"
+    BUFFER="ssh ${selected_host}"
     zle accept-line
   fi
   zle clear-screen
@@ -368,10 +377,8 @@ alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relativ
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias f='vim $(fzf)'
+alias fo='o $(fzf)'
 alias F='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
-alias fooe="$EDITOR ~/foo.txt"
-alias foo="cat ~/foo.txt"
-function foox() { cat ~/foo.txt | cargo run --bin $1 }
 alias ga='git add'
 alias gb='peco-checkout-branch'
 alias gbdelete='peco-branch-delete'
@@ -507,6 +514,17 @@ export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig /opt/homebrew/opt/ncurses/lib/pkgconfig"
+
+# openssl
+export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@1.1/lib"
+export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@1.1/include"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
+
+source ~/.zplug/init.zsh
+
+zplug 'zsh-users/zsh-autosuggestions'
+
+zplug load
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
