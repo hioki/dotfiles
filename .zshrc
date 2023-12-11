@@ -507,9 +507,11 @@ fi
 
 export PATH="/opt/homebrew:$PATH"
 
-for d in /opt/homebrew/opt/*/libexec/gnubin; do
-  export PATH=$d:$PATH
-done
+if [ -d /opt/homebrew ]; then
+  for d in /opt/homebrew/opt/*/libexec/gnubin; do
+    export PATH=$d:$PATH
+  done
+fi
 
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 
