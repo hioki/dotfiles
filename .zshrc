@@ -354,6 +354,7 @@ ghw () {
 
 alias a="alias"
 alias c='clion .'
+alias C='code .'
 alias ca='cargo'
 alias cr='cargo run --quiet'
 alias cb='cargo watch -x build'
@@ -364,6 +365,7 @@ alias d="docker"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
 alias drmi="docker image rm -f I"
+alias dkill="docker kill PS"
 alias dim="docker images"
 alias dc="docker-compose"
 alias dcs="docker-compose stop"
@@ -449,6 +451,7 @@ alias zl='nvim ~/.zshrc.local'
 alias Z='source ~/.zshrc'
 alias ZL='source ~/.zshrc.local'
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
+alias -g PS='`docker ps | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
 
 export EDITOR=nvim
