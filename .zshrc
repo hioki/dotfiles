@@ -247,6 +247,43 @@ function awsenv() {
   AWS_VAULT_SHELL=1 aws-vault exec $env -- $SHELL
 }
 
+function hankakuToZenkaku() {
+  awk '{
+      leading_space_count = 0
+      while (substr($0, 1, 1) == " ") {
+          leading_space_count++
+          $0 = substr($0, 2)
+      }
+      while (leading_space_count > 1) {
+          printf "　"
+          leading_space_count -= 2
+      }
+      if (leading_space_count == 1) {
+          printf " "
+      }
+      print
+  }' $1
+}
+
+function grepopen() {
+  nvim $(git grep --name-only $1)
+}
+
+calculate_average() {
+    sum=0
+    count=0
+    for num in "$@"; do
+        sum=$((sum + num))
+        count=$((count + 1))
+    done
+    if [ $count -eq 0 ]; then
+        echo "Arguments are required. (e.g. \`calculate_average 1 2\`)"
+    else
+        average=$(echo "$sum / $count" | bc -l)
+        printf "Average: %.2f\n" $average
+    fi
+}
+
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
 local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
@@ -434,7 +471,7 @@ alias tf="terraform"
 alias tfp="terraform plan"
 alias tfa="terraform apply"
 alias u="popd"
-alias U="git commit -am 'wip'"
+alias U="git commit -am '[ci skip] wip'"
 alias v="nvim"
 alias vk='nvim -c "au VimEnter * Denite -start-filter=1 -buffer-name=gtags_path gtags_path"'
 alias vshiftjis='nvim -c ":e ++enc=shift_jis"'
@@ -520,10 +557,17 @@ export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig /opt/homebrew/opt/ncurses/lib/pkgconfig"
 
+# for rye
+source "$HOME/.rye/env"
+
 # openssl
-export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@1.1/lib"
-export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@1.1/include"
+export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@3/lib"
+export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@3/include"
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
+
+# deno
+export DENO_INSTALL="$HOME/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
 
 source ~/.zplug/init.zsh
 
