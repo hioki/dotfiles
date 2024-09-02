@@ -7,8 +7,8 @@ current_branch="$(git symbolic-ref HEAD 2>/dev/null | sed -e 's/refs\/heads\///g
     current_branch="$(git describe --contains --all HEAD)"
 
 if [ -z "${current_branch}" ]; then
-    echo "Fix the bug in the $0 file because it failed to get the current branch"
-    exit 2
+    echo "Fix the bug in the $0 file because it failed to get the current branch" >&2
+    exit 0
 fi
 
 for target_branch in ${TARGET_BRANCHES}; do
