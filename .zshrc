@@ -390,8 +390,7 @@ ghw () {
 }
 
 alias a="alias"
-alias c='clion .'
-alias C='code .'
+alias c='code .'
 alias ca='cargo'
 alias cr='cargo run --quiet'
 alias cb='cargo watch -x build'
@@ -415,7 +414,8 @@ alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relat
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias f='vim $(fzf)'
+alias f='vim $(sk)'
+# alias f='vim $(fzf)'
 alias fo='o $(fzf)'
 alias F='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias ga='git add'
@@ -439,7 +439,7 @@ alias gg='ghq get'
 alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
 alias gm='git merge'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
-alias gpull='git pull'
+alias gp='git pull origin $(git branch --show-current)'
 alias gs='git show'
 alias gsm='git submodule'
 alias gsn='git show --name-only'
@@ -448,7 +448,8 @@ alias gas='git add . && git stash'
 alias gsp='git stash pop'
 alias gsc='git stash clear'
 alias gcancelcommit='git reset --soft HEAD^'
-alias gcanceladd='git reset HEAD'
+alias gcanceladd='git restore --staged .'
+alias gcanceladd_old='git reset HEAD'
 alias gt='gtree'
 alias goreautoimport='gore -autoimport'
 alias gho="gh repo view --web"
@@ -466,12 +467,13 @@ alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/ru
 alias s='spt' # spotify-tui
 # alias sed='gsed'
 alias sl='l'
-alias t="tree -I 'vendor|node_modules|target|__pycache__'"
+alias t="tree -a -I 'vendor|node_modules|target|__pycache__|.idea|.vscode|.git|.venv|.ruff_cache|.terraform'"
 alias tf="terraform"
 alias tfp="terraform plan"
 alias tfa="terraform apply"
 alias u="popd"
-alias U="git commit -am '[ci skip] wip'"
+alias U="git commit -am 'wip'"
+alias UU="git commit -am '[ci skip] wip'"
 alias v="nvim"
 alias vk='nvim -c "au VimEnter * Denite -start-filter=1 -buffer-name=gtags_path gtags_path"'
 alias vshiftjis='nvim -c ":e ++enc=shift_jis"'
@@ -555,21 +557,31 @@ export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 # for pyenv
 export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig /opt/homebrew/opt/ncurses/lib/pkgconfig"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig:/opt/homebrew/opt/ncurses/lib/pkgconfig"
 
 # for rye
 source "$HOME/.rye/env"
 
+# postgresql
+export PATH="$(brew --prefix)/opt/libpq/bin:$PATH"
+
 # openssl
 export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@3/lib"
 export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@3/include"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@3/lib/pkgconfig"
+# export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
+
+# usbboot
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix libusb)/lib/pkgconfig"
 
 # deno
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
 source ~/.zplug/init.zsh
+
+# https://github.com/lotabout/skim
+export SKIM_DEFAULT_COMMAND="rg --files --hidden --no-ignore -g '!.git' -g '!.idea' -g '!node_modules' -g '!.venv' -g '!.terraform'"
 
 zplug 'zsh-users/zsh-autosuggestions'
 

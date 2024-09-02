@@ -1,4 +1,4 @@
 PROMPT="%n@%m:%~# %f"
 
-export PKG_CONFIG_PATH="/usr/lib/arm-linux-gnueabihf/pkgconfig"
+export PKG_CONFIG_PATH="/usr/lib/arm-linux-gnueabihf/pkgconfig:$PKG_CONFIG_PATH"
 export LIBCLANG_INCLUDE_PATH="/usr/include/clang/7/include"
