@@ -509,9 +509,6 @@ fi
 # Python
 #export PATH="/usr/local/opt/python/libexec/bin:$PATH:$(python -m site --user-base)/bin"
 
-# Ruby
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 export PATH="$PATH:$GOBIN:$GOENV_ROOT/bin"
 export PATH="$PATH:/usr/local/share/git-core/contrib/diff-highlight"
@@ -544,35 +541,10 @@ if command -v pyenv > /dev/null; then
   eval "$(pyenv init -)"
 fi
 
-export PATH="/opt/homebrew:$PATH"
-
-if [ -d /opt/homebrew ]; then
-  for d in /opt/homebrew/opt/*/libexec/gnubin; do
-    export PATH=$d:$PATH
-  done
-fi
-
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
-
-# for pyenv
-export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig:/opt/homebrew/opt/ncurses/lib/pkgconfig"
 
 # for rye
 source "$HOME/.rye/env"
-
-# postgresql
-export PATH="$(brew --prefix)/opt/libpq/bin:$PATH"
-
-# openssl
-export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@3/lib"
-export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@3/include"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@3/lib/pkgconfig"
-# export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
-
-# usbboot
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix libusb)/lib/pkgconfig"
 
 # deno
 export DENO_INSTALL="$HOME/.deno"
