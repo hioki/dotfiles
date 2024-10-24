@@ -52,6 +52,8 @@ function PV() { pbpaste | nvim -R - }
 
 export PATH="$PATH:/usr/local/opt/mosquitto/sbin:/usr/local/opt/mosquitto/bin"
 
+export PATH="$HOME/.tfenv/bin:$PATH"
+
 fpath=($(brew --prefix)/share/zsh-completions $fpath)
 fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
 fpath=($HOME/.zfunc $fpath)
