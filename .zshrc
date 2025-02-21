@@ -553,7 +553,9 @@ fi
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
-source ~/.zplug/init.zsh
+if [ -f ~/.zplug/init.zsh ]; then
+  source ~/.zplug/init.zsh
+fi
 
 # https://github.com/lotabout/skim
 export SKIM_DEFAULT_COMMAND="rg --files --hidden --no-ignore -g '!.git' -g '!.idea' -g '!node_modules' -g '!.venv' -g '!.terraform'"
