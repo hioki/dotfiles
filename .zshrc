@@ -560,9 +560,10 @@ fi
 # https://github.com/lotabout/skim
 export SKIM_DEFAULT_COMMAND="rg --files --hidden --no-ignore -g '!.git' -g '!.idea' -g '!node_modules' -g '!.venv' -g '!.terraform'"
 
-zplug 'zsh-users/zsh-autosuggestions'
-
-zplug load
+if type zplug > /dev/null 2>&1; then
+  zplug 'zsh-users/zsh-autosuggestions'
+  zplug load
+fi
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
