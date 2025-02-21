@@ -545,7 +545,9 @@ fi
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 
 # for rye
-source "$HOME/.rye/env"
+if [ -f "$HOME/.rye/env" ]; then
+  source "$HOME/.rye/env"
+fi
 
 # deno
 export DENO_INSTALL="$HOME/.deno"
