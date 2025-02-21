@@ -32,12 +32,12 @@ export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 # for pyenv
 export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/bzip2/lib/pkgconfig:/opt/homebrew/opt/ncurses/lib/pkgconfig"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix bzip2)/lib/pkgconfig:$(brew --prefix ncurses)/lib/pkgconfig"
 
 export OPENSSL_DIR=$(brew --prefix openssl@3)
 export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@3/lib"
 export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@3/include"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/homebrew/opt/openssl@3/lib/pkgconfig"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix openssl@3)/lib/pkgconfig"
 
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias rm='trash'

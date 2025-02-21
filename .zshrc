@@ -94,7 +94,7 @@ function peco-select-history() {
       }
 
     function peco-branch-delete() {
-      git branch | egrep -v 'master$|production$' | peco | xargs git branch -D
+      git branch | grep -Ev 'master$|production$' | peco | xargs git branch -D
     }
 
   function peco-src() {
@@ -422,6 +422,7 @@ alias ga='git add'
 alias gb='peco-checkout-branch'
 alias gbdelete='peco-branch-delete'
 alias gc='git commit'
+alias cg='git commit'
 alias gcam='git commit --am'
 alias gco='git checkout'
 alias gcoh='git checkout HEAD'
@@ -561,3 +562,4 @@ zplug load
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
+source $HOME/.tenv.completion.zsh
