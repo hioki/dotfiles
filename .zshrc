@@ -567,4 +567,4 @@ fi
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
-source $HOME/.tenv.completion.zsh
+[ -f $HOME/.tenv.completion.zsh ] && source $HOME/.tenv.completion.zsh
