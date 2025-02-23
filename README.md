@@ -1,4 +1,6 @@
-# Usage
+# dotfiles
+
+## Installation
 
 ```shell
 $ make
