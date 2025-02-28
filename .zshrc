@@ -526,7 +526,9 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 test -e "${HOME}/.rsyncignore" && alias rsync="rsync --exclude-from ${HOME}/.rsyncignore"
 
-eval "$(direnv hook zsh)"
+if command -v direnv > /dev/null; then
+  eval "$(direnv hook zsh)"
+fi
 
 
 export PATH="$HOME/.poetry/bin:$PATH"
