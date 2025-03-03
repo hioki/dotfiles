@@ -1,2 +1,0 @@
-set -g prefix C-g
-bind C-g send-prefix
