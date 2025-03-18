@@ -285,46 +285,8 @@ calculate_average() {
 }
 
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
-local LOCAL_HOSTNAMES_CACHE="$CACHE_DIR/local_hostnames"
 
-recache_local_hostnames() {
-  type ip >/dev/null || return
-  type grep >/dev/null || return
-  nmap -sP -R $(ip addr | grep -oP '(?<=inet )192\.168\.[^ ]+(?=)' | head -n1) \
-    | grep --only-matching --perl-regexp '(?<=Nmap scan report for )[^\.]+(?=\.lan)' \
-    | sort \
-    | uniq \
-    > "$LOCAL_HOSTNAMES_CACHE"
-}
-
-ssh_local_hostnames_cache() {
-  local selected_host=$(cat "$LOCAL_HOSTNAMES_CACHE" | peco --query "$LBUFFER")
-  if [ -n "$selected_host" ]; then
-    ssh root@${selected_host}
-  fi
-}
-
-sshpeco() {
-  local host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | peco --query "$LBUFFER")
-  if [ -n "$host" ]; then
-    BUFFER="ssh ${host}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N sshpeco
-bindkey '^[' sshpeco
-
-# ssh_st_prefixed_host() {
-#   local selected_host=$(grep -oP '(?<=^Host )st-.*' ~/.ssh/config.d/idein | peco --query "$LBUFFER")
-#   if [ -n "$selected_host" ]; then
-#     BUFFER="ssh root@${selected_host}"
-#     zle accept-line
-#   fi
-#   zle clear-screen
-# }
-# zle -N ssh_st_prefixed_host
-ssh_st_prefixed_host() {
+pecossh() {
   local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
@@ -332,9 +294,9 @@ ssh_st_prefixed_host() {
   fi
   zle clear-screen
 }
-zle -N ssh_st_prefixed_host
+zle -N pecossh
 
-bindkey '^]' ssh_st_prefixed_host
+bindkey '^]' pecossh
 
 ssh() {
   if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
@@ -346,18 +308,7 @@ ssh() {
   fi
 }
 
-select_and_load_tmuxp_setting() {
-  local selected=$(find ~/.config/tmuxp/*.yaml | peco --query "$LBUFFER")
-  if [ -n "${selected}" ]; then
-    BUFFER="tmuxp load ${selected}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N select_and_load_tmuxp_setting
-bindkey '^\' select_and_load_tmuxp_setting
-
-work_repo() {
+cdpecorepo() {
   # WORK_REPO=$(cat <<EOS
   # <name>\t<path>
   # ....
@@ -371,23 +322,8 @@ work_repo() {
   fi
   zle clear-screen
 }
-zle -N work_repo
-bindkey '^j' work_repo
-
-edit_tmuxp_setting() {
-  local selected=$(find ~/.config/tmuxp/*.yaml | peco --query "$LBUFFER")
-  if [ -n "${selected}" ]; then
-    ${EDITOR} ${selected}
-  fi
-}
-
-ghw () {
-  set -e
-  workflow_file="$(find "$(git rev-parse --show-toplevel)/.github/workflows" -type f -name "*.yml" -print0 | xargs -0 basename | peco)"
-  gh workflow run "${workflow_file}" $@
-  sleep 2
-  open $(gh run list --workflow="${workflow_file}" -L 1 --json url --jq '.[].url')
-}
+zle -N cdpecorepo
+bindkey '^j' cdpecorepo
 
 alias a="alias"
 alias c='code .'
@@ -414,8 +350,7 @@ alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relat
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias f='vim $(sk)'
-# alias f='vim $(fzf)'
+alias f='vim $(fzf)'
 alias fo='o $(fzf)'
 alias F='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias ga='git add'
