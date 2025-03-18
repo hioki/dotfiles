@@ -287,7 +287,7 @@ calculate_average() {
 local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
 
 pecossh() {
-  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | peco --query "$LBUFFER")
+  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -Ev '^st-|^sdwire' | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
     zle accept-line
@@ -295,8 +295,18 @@ pecossh() {
   zle clear-screen
 }
 zle -N pecossh
-
 bindkey '^]' pecossh
+
+pecosshstsdwire() {
+  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -E '^st-|^sdwire' | peco --query "$LBUFFER")
+  if [ -n "$selected_host" ]; then
+    BUFFER="ssh ${selected_host}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N pecosshstsdwire
+bindkey '^\' pecosshstsdwire
 
 ssh() {
   if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
