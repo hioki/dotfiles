@@ -9,7 +9,7 @@ colors
 
 setopt auto_cd
 setopt auto_pushd
-# setopt correct
+setopt correct
 setopt list_packed
 setopt noautoremoveslash
 setopt nolistbeep
@@ -36,9 +36,9 @@ setopt share_history        # share command history data
 
 autoload zed
 
-function print_known_hosts (){ 
+function print_known_hosts (){
   if [ -f $HOME/.ssh/known_hosts ]; then
-    cat $HOME/.ssh/known_hosts | tr ',' ' ' | cut -d' ' -f1 
+    cat $HOME/.ssh/known_hosts | tr ',' ' ' | cut -d' ' -f1
   fi
 }
 _cache_hosts=($( print_known_hosts ))
@@ -269,6 +269,21 @@ function grepopen() {
   nvim $(git grep --name-only $1)
 }
 
+ssh_clean_control_files() {
+  setopt localoptions nullglob
+
+  local files=(~/.ssh/control-*)
+  if (( ${#files[@]} == 0 )); then
+    echo "No ~/.ssh/control-* files found."
+    return 0
+  fi
+
+  echo "Removing the following files:"
+  print -l -- "${files[@]}"
+  rm -i -- "${files[@]}"
+  echo "Removed."
+}
+
 calculate_average() {
     sum=0
     count=0
@@ -284,10 +299,10 @@ calculate_average() {
     fi
 }
 
-local CACHE_DIR="$HOME/Library/Caches/$(whoami)"
-
 pecossh() {
-  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -Ev '^st-|^sdwire' | peco --query "$LBUFFER")
+  local local_hosts=$(cat ~/.ssh/visited_local_hosts)
+  local private_hosts=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -Ev '^st-|^sdwire')
+  local selected_host=$(echo "${local_hosts}\n${private_hosts}" | peco --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
     zle accept-line
@@ -309,13 +324,15 @@ zle -N pecosshstsdwire
 bindkey '^\' pecosshstsdwire
 
 ssh() {
-  if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
-    tmux rename-window ${@: -1}
-    command ssh "$@"
-    tmux set-window-option automatic-rename "on" 1>/dev/null
-  else
-    command ssh "$@"
+  local host="$1"
+  if [[ "$host" == *.local ]]; then
+    local file=~/.ssh/visited_local_hosts
+    [ -f "$file" ] || touch "$file"
+    if ! grep -qx "$host" "$file"; then
+        echo "$host" >> "$file"
+    fi
   fi
+  command ssh "$@"
 }
 
 cdpecorepo() {
