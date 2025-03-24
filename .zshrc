@@ -280,7 +280,7 @@ ssh_clean_control_files() {
 
   echo "Removing the following files:"
   print -l -- "${files[@]}"
-  rm -i -- "${files[@]}"
+  rm -f -- "${files[@]}"
   echo "Removed."
 }
 
