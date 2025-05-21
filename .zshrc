@@ -269,6 +269,19 @@ function grepopen() {
   nvim $(git grep --name-only $1)
 }
 
+function switch_main_branch() {
+  local branches=("main" "master" "develop")
+  for branch in "${branches[@]}"; do
+    if git show-ref --verify --quiet "refs/heads/$branch" &>/dev/null; then
+      echo "Switching to branch: $branch"
+      git switch "$branch"
+      return
+    fi
+  done
+  echo "No suitable branch found (main, master, develop)" >&2
+  return 1
+}
+
 ssh_clean_control_files() {
   setopt localoptions nullglob
 
@@ -400,7 +413,7 @@ alias gempath="gem environment | grep -A 1 'GEM PATH' | tail -n 1 | tr -s ' ' | 
 alias gf='git fetch -p'
 alias gg='ghq get'
 alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
-alias gm='git merge'
+alias gm='switch_main_branch'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
 alias gp='git pull origin $(git branch --show-current)'
 alias gs='git show'
@@ -424,13 +437,15 @@ alias ht='sudo htop'
 alias kctl="kubectl"
 alias less="less -R"
 alias lsfullpath='find `pwd` -maxdepth 1'
+alias m="switch_main_branch"
 alias nv="nvim"
 alias rgs='rg -E sjis'
 alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
-alias s='spt' # spotify-tui
-# alias sed='gsed'
+alias rsyncj="rsync --progress -avz -e 'ssh -J hioki-bastion'"
+alias scpj='scp -J hioki-bastion'
 alias sl='l'
 alias t="tree -a -I 'vendor|node_modules|target|__pycache__|.idea|.vscode|.git|.venv|.ruff_cache|.terraform'"
+alias tree="tree -a"
 alias tf="terraform"
 alias tfp="terraform plan"
 alias tfa="terraform apply"
@@ -455,6 +470,10 @@ alias ZL='source ~/.zshrc.local'
 alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
 alias -g PS='`docker ps | tail -n +2 | peco | cut -d" " -f1`'
 alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
+
+if [[ $(ulimit -n) -lt 1024 ]]; then
+  ulimit -n 1024
+fi
 
 export EDITOR=nvim
 export CC=/usr/bin/gcc
@@ -505,6 +524,9 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv > /dev/null; then
   eval "$(pyenv init -)"
 fi
+
+# tenv
+export TENV_AUTO_INSTALL=true
 
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 
