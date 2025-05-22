@@ -3,6 +3,12 @@ SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
 [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
   PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
 
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/hioki/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
 function update_prompt_for_aws_vault() {
   if [[ ! -z $AWS_VAULT_SHELL  ]]; then
     PROMPT="($AWS_VAULT) $PROMPT"
