@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-echo "in: $(/opt/homebrew/bin/SwitchAudioSource -c -t input) / out: $(/opt/homebrew/bin/SwitchAudioSource -c -t output)"
+echo "$(/opt/homebrew/bin/SwitchAudioSource -c -t input | cut -c -3)/$(/opt/homebrew/bin/SwitchAudioSource -c -t output | cut -c -3)"
