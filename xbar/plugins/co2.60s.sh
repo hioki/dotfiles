@@ -12,7 +12,7 @@ elif [[ $co2 -ge 1000 ]]; then  color="#FFDD99"
 else                            color="#BBFFBB"
 fi
 
-echo "${co2}ppm | color=${color}"
+echo "💨${co2} | color=${color}"
 
 # --- 以下はクリックで開くドロップダウン（任意） -------
 temp=$(echo "$json" | jq -r '.body.temperature')
