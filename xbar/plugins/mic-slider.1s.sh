@@ -8,8 +8,16 @@
 # AppleScript で「入力音量スライダー」の現在値を取得（0～100 の整数）
 VOL=$(osascript -e 'input volume of (get volume settings)')
 
+if [ "$VOL" = "missing value" ]; then
+  VOL="-"
+else
+  if ! [[ "$VOL" =~ ^[0-9]+$ ]]; then
+    VOL="-"
+  fi
+fi
+
 # メニューバーにパーセント表示
-echo "🎚️${VOL}%"
+echo "📢${VOL}%"
 echo "---"
 echo "スライダー値: ${VOL}%"
 echo "更新: $(date '+%H:%M:%S')"
