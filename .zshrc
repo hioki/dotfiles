@@ -476,7 +476,7 @@ if [[ $(ulimit -n) -lt 1024 ]]; then
 fi
 
 export EDITOR=nvim
-export CC=/usr/bin/gcc
+# export CC=/usr/bin/gcc
 export PGDATA=/usr/local/var/postgres
 
 # Go
