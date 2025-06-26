@@ -2,6 +2,7 @@ PROMPT="%(?.%F{blue}.%F{red})[%n@%m %~]$ %f"
 SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
 [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
   PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
+PROMPT2=''
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/hioki/.docker/completions $fpath)
@@ -47,7 +48,7 @@ export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix openssl@3)/lib/pkgconfi
 
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias rm='trash'
-alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hioki/karabiner-json-updater/personal_rules.json\" | sort | peco"
+alias cheatsheet="jq -r '.rules[] | .description' < \"$(ghq root)/github.com/hioki/karabiner-json-updater/personal_rules.json\" | sort | fzf"
 alias ls="exa"
 alias l="exa -ahl --git"
 alias grep="ggrep"

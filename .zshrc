@@ -73,40 +73,34 @@ function do_enter() {
 zle -N do_enter
 bindkey '^m' do_enter
 
-function peco-select-history() {
-  local tac
-  if which tac > /dev/null; then
-    tac="tac"
-  else
-    tac="tail -r"
+function fzf-select-history() {
+  local selected
+  selected=$(history -n 1 | fzf --no-sort --tac --query "$LBUFFER") || return
+  selected=${selected##*  }
+  BUFFER="$selected"
+  zle accept-line
+}
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
+
+function fzf-checkout-branch() {
+  git checkout "$(git branch --format='%(refname:short)' | fzf)"
+}
+
+function fzf-branch-delete() {
+  git branch --sort=-committerdate | grep -Ev 'master$|production$' | fzf -m | xargs git branch -D
+}
+
+function fzf-src() {
+  local selected_dir=$(ghq list --full-path | fzf)
+  if [ -n "$selected_dir" ]; then
+    BUFFER="cd ${selected_dir}"
+    zle accept-line
   fi
-  BUFFER=$(history -n 1 | \
-    eval $tac | \
-    peco --query "$LBUFFER")
-      CURSOR=$#BUFFER
-      zle clear-screen
-    }
-  zle -N peco-select-history
-    bindkey '^r' peco-select-history
-
-      function peco-checkout-branch() {
-        git checkout $(git branch --format='%(refname:short)' | peco)
-      }
-
-    function peco-branch-delete() {
-      git branch | grep -Ev 'master$|production$' | peco | xargs git branch -D
-    }
-
-  function peco-src() {
-    local selected_dir=$(ghq list --full-path | peco)
-    if [ -n "$selected_dir" ]; then
-      BUFFER="cd ${selected_dir}"
-      zle accept-line
-    fi
-    zle clear-screen
-  }
-zle -N peco-src
-bindkey '^@' peco-src
+  zle clear-screen
+}
+zle -N fzf-src
+bindkey '^@' fzf-src
 
 function gi() {
   curl https://www.gitignore.io/api/$@
@@ -117,7 +111,7 @@ function back-to-previous-edit() {
   zle accept-line
 }
 zle -N back-to-previous-edit
-bindkey "^o" back-to-previous-edit
+# bindkey "^o" back-to-previous-edit
 
 function rr() {
   clear
@@ -125,15 +119,15 @@ function rr() {
 }
 
 function rv() {
-  hits=$(rg --hidden -n "$@")
-  if [ $? -eq 1 ]; then
-    echo "Nothing"
-    return
-  fi
-  line=$(echo $hits | peco --query "$LBUFFER")
-  filename=$(echo $line | cut -d ':' -f 1)
-  linenumber=$(echo $line | cut -d ':' -f 2)
-  nvim -c $linenumber $filename
+  local selected
+  selected=$(rg --hidden --line-number --no-heading --color=always "$@" |
+    fzf --ansi --delimiter : \
+        --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
+        --preview-window '+{2}-10') || return
+
+  local file=$(echo "$selected" | cut -d':' -f1)
+  local line=$(echo "$selected" | cut -d':' -f2)
+  nvim +"$line" "$file"
 }
 
 function p() {
@@ -155,14 +149,6 @@ function git-delete-merged-branches() {
 function catp() {
   pygmentize $1
   cat $1 | pbcopy
-}
-
-function pullconf() {
-  local a="$(ghq root)/github.com/hioki-daichi"
-  (cd "${a}/dotfiles"; git pull origin master) &
-  (cd "${a}/nvim-config"; git pull origin master) &
-  (cd "${a}/Personal-Rules-For-Karabiner-Elements"; git pull origin master; ./update.sh) &
-  wait
 }
 
 function ppcsv() {
@@ -243,7 +229,7 @@ function awsenv() {
   if [[ ! -z $AWS_VAULT ]]; then
     unset AWS_VAULT
   fi
-  local env=$(grep -oP '(?<=^\[profile ).*(?=])' ~/.aws/config | peco --query "$LBUFFER")
+  local env=$(grep -oP '(?<=^\[profile ).*(?=])' ~/.aws/config | fzf --query "$LBUFFER")
   AWS_VAULT_SHELL=1 aws-vault exec $env -- $SHELL
 }
 
@@ -312,29 +298,18 @@ calculate_average() {
     fi
 }
 
-pecossh() {
+fzfssh() {
   local local_hosts=$(cat ~/.ssh/visited_local_hosts)
   local private_hosts=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -Ev '^st-|^sdwire')
-  local selected_host=$(echo "${local_hosts}\n${private_hosts}" | peco --query "$LBUFFER")
+  local selected_host=$(echo "${local_hosts}\n${private_hosts}" | fzf --query "$LBUFFER")
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
     zle accept-line
   fi
   zle clear-screen
 }
-zle -N pecossh
-bindkey '^]' pecossh
-
-pecosshstsdwire() {
-  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -E '^st-|^sdwire' | peco --query "$LBUFFER")
-  if [ -n "$selected_host" ]; then
-    BUFFER="ssh ${selected_host}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N pecosshstsdwire
-bindkey '^\' pecosshstsdwire
+zle -N fzfssh
+bindkey '^]' fzfssh
 
 ssh() {
   local host="$1"
@@ -347,23 +322,6 @@ ssh() {
   fi
   command ssh "$@"
 }
-
-cdpecorepo() {
-  # WORK_REPO=$(cat <<EOS
-  # <name>\t<path>
-  # ....
-  # EOS
-  # )
-  local selected=$(echo $WORK_REPO | peco --query "$LBUFFER")
-  if [ -n "${selected}" ]; then
-    local repo=$(echo ${selected} | cut -f2)
-    BUFFER="cd ${repo}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N cdpecorepo
-bindkey '^j' cdpecorepo
 
 alias a="alias"
 alias c='code .'
@@ -394,8 +352,8 @@ alias f='vim $(fzf)'
 alias fo='o $(fzf)'
 alias F='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
 alias ga='git add'
-alias gb='peco-checkout-branch'
-alias gbdelete='peco-branch-delete'
+alias gb='fzf-checkout-branch'
+alias gbdelete='fzf-branch-delete'
 alias gc='git commit'
 alias cg='git commit'
 alias gcam='git commit --am'
@@ -406,7 +364,7 @@ alias gd='git diff --no-prefix'
 alias gdw='git diff --no-prefix --ignore-space-change'
 alias gdc='git diff --cached --no-prefix'
 alias gdcw='git diff --cached --no-prefix --ignore-space-change'
-alias gdcv='nvim $(git diff --cached --name-only | peco)'
+alias gdcv='nvim $(git diff --cached --name-only | fzf)'
 alias gdh='git diff --no-prefix --ignore-space-at-eol HEAD'
 alias gdhs='git diff --no-prefix --ignore-space-at-eol HEAD..stash@{0}'
 alias gempath="gem environment | grep -A 1 'GEM PATH' | tail -n 1 | tr -s ' ' | cut -d ' ' -f 3"
@@ -467,16 +425,15 @@ alias z='nvim ~/.zshrc'
 alias zl='nvim ~/.zshrc.local'
 alias Z='source ~/.zshrc'
 alias ZL='source ~/.zshrc.local'
-alias -g P='`docker ps -a | tail -n +2 | peco | cut -d" " -f1`'
-alias -g PS='`docker ps | tail -n +2 | peco | cut -d" " -f1`'
-alias -g I='`docker images | tail -n +2 | peco | tr -s " " | cut -d" " -f3`'
+alias -g P='`docker ps -a | tail -n +2 | fzf | cut -d" " -f1`'
+alias -g PS='`docker ps | tail -n +2 | fzf | cut -d" " -f1`'
+alias -g I='`docker images | tail -n +2 | fzf | tr -s " " | cut -d" " -f3`'
 
 if [[ $(ulimit -n) -lt 1024 ]]; then
   ulimit -n 1024
 fi
 
 export EDITOR=nvim
-# export CC=/usr/bin/gcc
 export PGDATA=/usr/local/var/postgres
 
 # Go
@@ -510,7 +467,6 @@ test -e "${HOME}/.rsyncignore" && alias rsync="rsync --exclude-from ${HOME}/.rsy
 if command -v direnv > /dev/null; then
   eval "$(direnv hook zsh)"
 fi
-
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
