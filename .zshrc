@@ -73,6 +73,17 @@ function do_enter() {
 zle -N do_enter
 bindkey '^m' do_enter
 
+cdfzfrepo() {
+  local selected=$(echo $WORK_REPO | fzf --no-sort)
+  if [ -n "$selected" ]; then
+    BUFFER="cd $selected"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N cdfzfrepo
+bindkey '^j' cdfzfrepo
+
 function fzf-select-history() {
   local selected
   selected=$(history -n 1 | fzf --no-sort --tac --query "$LBUFFER") || return
