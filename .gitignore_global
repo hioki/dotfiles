@@ -16,3 +16,4 @@ GTAGS
 __pycache__/
 ignore/
 /.actdk/cache
+**/.claude/settings.local.json

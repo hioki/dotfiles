@@ -74,15 +74,16 @@ zle -N do_enter
 bindkey '^m' do_enter
 
 cdfzfrepo() {
-  local selected=$(echo $WORK_REPO | fzf --no-sort)
+  local selected=$(echo "$WORK_REPO" | fzf)
   if [ -n "$selected" ]; then
-    BUFFER="cd $selected"
+    local repo=$(echo "$selected" | cut -f2)
+    BUFFER="cd $repo"
     zle accept-line
   fi
   zle clear-screen
 }
 zle -N cdfzfrepo
-bindkey '^j' cdfzfrepo
+bindkey '^f' cdfzfrepo
 
 function fzf-select-history() {
   local selected
@@ -321,6 +322,18 @@ fzfssh() {
 }
 zle -N fzfssh
 bindkey '^]' fzfssh
+
+
+fzfsshstsdwire() {
+  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -E '^st-|^sdwire' | fzf --query "$LBUFFER")
+  if [ -n "$selected_host" ]; then
+    BUFFER="ssh ${selected_host}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N fzfsshstsdwire
+bindkey '^\' fzfsshstsdwire
 
 ssh() {
   local host="$1"
