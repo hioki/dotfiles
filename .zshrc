@@ -83,7 +83,7 @@ cdfzfrepo() {
   zle clear-screen
 }
 zle -N cdfzfrepo
-bindkey '^f' cdfzfrepo
+bindkey '^\^' cdfzfrepo
 
 function fzf-select-history() {
   local selected
@@ -372,9 +372,13 @@ alias dc='code . `git diff --no-prefix --ignore-space-at-eol --name-only --relat
 alias dv='nvim `git diff --no-prefix --ignore-space-at-eol --name-only --relative`'
 alias dcc='code . `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
 alias dcv='nvim `git diff --no-prefix --ignore-space-at-eol --cached --name-only --relative`'
-alias f='vim $(fzf)'
-alias fo='o $(fzf)'
-alias F='nvim -c "au VimEnter * VimFilerExplorer -winwidth=50 -no-quit"'
+alias f='fvim'
+alias fb='fbat'
+alias fbat='f=$(fzf) && [ -f "$f" ] && bat "$f"'
+alias fv='fvim'
+alias fvim='f=$(fzf) && [ -f "$f" ] && vim "$f"'
+alias fo='fopen'
+alias fopen='f=$(fzf) && [ -f "$f" ] && open "$f"'
 alias ga='git add'
 alias gb='fzf-checkout-branch'
 alias gbdelete='fzf-branch-delete'
@@ -459,6 +463,8 @@ fi
 
 export EDITOR=nvim
 export PGDATA=/usr/local/var/postgres
+
+export FZF_DEFAULT_OPTS="--reverse"
 
 # Go
 export GOPATH=$HOME/go
