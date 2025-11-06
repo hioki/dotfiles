@@ -15,18 +15,13 @@ if [ -f "$TIMER_FILE" ]; then
 
   if [ $ELAPSED_MINUTES -ge 60 ]; then
     COLOR="#FF0000"
-    STYLE="bold"
   elif [ $ELAPSED_MINUTES -ge 50 ]; then
     COLOR="#FFAA00"
-    STYLE=""
   else
     COLOR=""
-    STYLE=""
   fi
 
-  if [ -n "$COLOR" ] && [ -n "$STYLE" ]; then
-    echo "⏱ ${ELAPSED_MINUTES}m | color=$COLOR $STYLE=true"
-  elif [ -n "$COLOR" ]; then
+  if [ -n "$COLOR" ]; then
     echo "⏱ ${ELAPSED_MINUTES}m | color=$COLOR"
   else
     echo "⏱ ${ELAPSED_MINUTES}m"
