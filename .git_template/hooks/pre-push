@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if git config --get remote.origin.url | grep --quiet -F ssh://git@github.com/hioki; then
+    exit 0
+fi
+
 COMMAND_TYPE=push
 TARGET_BRANCHES="main master develop staging production"
 

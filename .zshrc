@@ -464,7 +464,7 @@ fi
 export EDITOR=nvim
 export PGDATA=/usr/local/var/postgres
 
-export FZF_DEFAULT_OPTS="--reverse"
+export FZF_DEFAULT_OPTS="--reverse --multi"
 
 # Go
 export GOPATH=$HOME/go
@@ -536,6 +536,18 @@ if type zplug > /dev/null 2>&1; then
   zplug 'zsh-users/zsh-autosuggestions'
   zplug load
 fi
+
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/hioki/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/hioki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/hioki/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/hioki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/hioki/google-cloud-sdk/completion.zsh.inc'; fi
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`

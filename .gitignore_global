@@ -15,5 +15,7 @@ GRTAGS
 GTAGS
 __pycache__/
 ignore/
-/.actdk/cache
+**/.actdk/cache
 **/.claude/settings.local.json
+docker-compose.override.yml
+.env-dev-local.override

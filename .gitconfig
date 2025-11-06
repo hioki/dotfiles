@@ -37,3 +37,5 @@
 	smudge = git-lfs smudge -- %f
 [push]
 	default = current
+[alias]
+	ai-commit = !claude code "Generate a commit message for the staged changes. Use conventional commits format (feat:, fix:, docs:, etc.). Keep it under 50 characters for the subject line." --include-git-diff
