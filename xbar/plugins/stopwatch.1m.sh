@@ -34,6 +34,11 @@ if [ -f "$TIMER_FILE" ]; then
   if [ $HOURS -gt 0 ]; then
     echo "詳細: ${HOURS}時間${MINUTES}分"
   fi
+  echo "---"
+  echo "時間調整"
+  echo "-- +1分 | bash='$0' param1=adjust param2=+60 terminal=false refresh=true"
+  echo "-- -1分 | bash='$0' param1=adjust param2=-60 terminal=false refresh=true"
+  echo "---"
   echo "停止 | bash='$0' param1=stop terminal=false refresh=true"
 else
   echo "⏱ -m"
@@ -46,4 +51,12 @@ if [ "$1" = "start" ]; then
   date +%s > "$TIMER_FILE"
 elif [ "$1" = "stop" ]; then
   rm -f "$TIMER_FILE"
+elif [ "$1" = "adjust" ]; then
+  if [ -f "$TIMER_FILE" ]; then
+    START_TIME=$(cat "$TIMER_FILE")
+    # 調整値は秒単位（+60 or -60）
+    ADJUSTMENT=$2
+    NEW_START_TIME=$((START_TIME - ADJUSTMENT))
+    echo "$NEW_START_TIME" > "$TIMER_FILE"
+  fi
 fi
