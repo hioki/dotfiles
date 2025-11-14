@@ -155,7 +155,7 @@ if [ "$STATUS" = "completed" ]; then
 elif [ "$STATUS" = "running" ]; then
   MAIN_LINE=$(printf "🧘 %s R%d/%d" "$(format_time "$LAST_REMAINING")" "$CURRENT_ROUND" "$ACTIVE_ROUNDS")
 else
-  MAIN_LINE=$(printf "🧘 Ready %ss×%d" "$DEFAULT_INTERVAL" "$DEFAULT_ROUNDS")
+  MAIN_LINE="🧘"
 fi
 
 echo "$MAIN_LINE"
