@@ -533,16 +533,11 @@ fi
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
-if [ -f ~/.zplug/init.zsh ]; then
-  source ~/.zplug/init.zsh
-fi
-
 # https://github.com/lotabout/skim
 export SKIM_DEFAULT_COMMAND="rg --files --hidden --no-ignore -g '!.git' -g '!.idea' -g '!node_modules' -g '!.venv' -g '!.terraform'"
 
-if type zplug > /dev/null 2>&1; then
-  zplug 'zsh-users/zsh-autosuggestions'
-  zplug load
+if [ -f ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
