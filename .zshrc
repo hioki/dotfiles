@@ -498,9 +498,14 @@ fi
 export PATH="$HOME/.poetry/bin:$PATH"
 
 export PATH="$HOME/.anyenv/bin:$PATH"
-if command -v anyenv > /dev/null; then
+_anyenv_init_once() {
+  unfunction _anyenv_init_once 2>/dev/null
   eval "$(anyenv init -)"
-fi
+}
+anyenv() {
+  _anyenv_init_once
+  anyenv "$@"
+}
 
 export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
