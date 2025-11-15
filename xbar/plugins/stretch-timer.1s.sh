@@ -5,7 +5,6 @@
 # <xbar.desc>ストレッチ用のインターバルタイマー（音声通知付き）</xbar.desc>
 # <xbar.refresh>1s</xbar.refresh>
 # <xbar.var>number(VAR_INTERVAL=30): 1セットの秒数</xbar.var>
-# <xbar.var>number(VAR_ROUNDS=10): 総セット数</xbar.var>
 
 STATE_FILE="$HOME/.xbar_stretch_timer"
 
@@ -32,8 +31,8 @@ long_beep() {
 }
 
 save_state() {
-  printf "%s|%s|%s|%s|%s|%s\n" \
-    "$STATUS" "$CURRENT_ROUND" "$ROUND_START" "$LAST_REMAINING" "$ACTIVE_INTERVAL" "$ACTIVE_ROUNDS" >"$STATE_FILE"
+  printf "%s|%s|%s|%s|%s\n" \
+    "$STATUS" "$CURRENT_ROUND" "$ROUND_START" "$LAST_REMAINING" "$ACTIVE_INTERVAL" >"$STATE_FILE"
 }
 
 format_time() {
@@ -47,14 +46,9 @@ format_time() {
 }
 
 DEFAULT_INTERVAL=${VAR_INTERVAL:-30}
-DEFAULT_ROUNDS=${VAR_ROUNDS:-10}
 
 if ! is_positive_int "$DEFAULT_INTERVAL"; then
   DEFAULT_INTERVAL=30
-fi
-
-if ! is_positive_int "$DEFAULT_ROUNDS"; then
-  DEFAULT_ROUNDS=10
 fi
 
 STATUS="stopped"
@@ -62,16 +56,15 @@ CURRENT_ROUND=0
 ROUND_START=0
 LAST_REMAINING=$DEFAULT_INTERVAL
 ACTIVE_INTERVAL=$DEFAULT_INTERVAL
-ACTIVE_ROUNDS=$DEFAULT_ROUNDS
 
 if [ -f "$STATE_FILE" ]; then
-  if IFS='|' read -r STATUS CURRENT_ROUND ROUND_START LAST_REMAINING ACTIVE_INTERVAL ACTIVE_ROUNDS <"$STATE_FILE"; then
+  if IFS='|' read -r STATUS CURRENT_ROUND ROUND_START LAST_REMAINING ACTIVE_INTERVAL _ <"$STATE_FILE"; then
     :
   fi
 fi
 
 case "$STATUS" in
-running|completed)
+running)
   ;;
 *)
   STATUS="stopped"
@@ -82,20 +75,13 @@ esac
 [[ "$ROUND_START" =~ ^[0-9]+$ ]] || ROUND_START=0
 [[ "$LAST_REMAINING" =~ ^[0-9]+$ ]] || LAST_REMAINING=$DEFAULT_INTERVAL
 [[ "$ACTIVE_INTERVAL" =~ ^[0-9]+$ ]] || ACTIVE_INTERVAL=$DEFAULT_INTERVAL
-[[ "$ACTIVE_ROUNDS" =~ ^[0-9]+$ ]] || ACTIVE_ROUNDS=$DEFAULT_ROUNDS
-
 if [ "$ACTIVE_INTERVAL" -le 0 ]; then
   ACTIVE_INTERVAL=$DEFAULT_INTERVAL
-fi
-
-if [ "$ACTIVE_ROUNDS" -le 0 ]; then
-  ACTIVE_ROUNDS=$DEFAULT_ROUNDS
 fi
 
 if [ "$1" = "start" ]; then
   STATUS="running"
   ACTIVE_INTERVAL=$DEFAULT_INTERVAL
-  ACTIVE_ROUNDS=$DEFAULT_ROUNDS
   CURRENT_ROUND=1
   ROUND_START=$(date +%s)
   LAST_REMAINING=$ACTIVE_INTERVAL
@@ -120,22 +106,15 @@ if [ "$STATUS" = "running" ]; then
 
   while [ "$REMAINING" -le 0 ]; do
     long_beep
-    if [ "$CURRENT_ROUND" -ge "$ACTIVE_ROUNDS" ]; then
-      STATUS="completed"
-      LAST_REMAINING=0
-      save_state
-      break
-    else
-      CURRENT_ROUND=$((CURRENT_ROUND + 1))
-      ROUND_START=$((ROUND_START + ACTIVE_INTERVAL))
-      if [ "$ROUND_START" -gt "$NOW" ]; then
-        ROUND_START=$NOW
-      fi
-      ELAPSED=$((NOW - ROUND_START))
-      REMAINING=$((ACTIVE_INTERVAL - ELAPSED))
-      LAST_REMAINING=$ACTIVE_INTERVAL
-      save_state
+    CURRENT_ROUND=$((CURRENT_ROUND + 1))
+    ROUND_START=$((ROUND_START + ACTIVE_INTERVAL))
+    if [ "$ROUND_START" -gt "$NOW" ]; then
+      ROUND_START=$NOW
     fi
+    ELAPSED=$((NOW - ROUND_START))
+    REMAINING=$((ACTIVE_INTERVAL - ELAPSED))
+    LAST_REMAINING=$ACTIVE_INTERVAL
+    save_state
   done
 
   if [ "$STATUS" = "running" ]; then
@@ -150,10 +129,8 @@ if [ "$STATUS" = "running" ]; then
   fi
 fi
 
-if [ "$STATUS" = "completed" ]; then
-  MAIN_LINE="🧘 完了 ${ACTIVE_ROUNDS}/${ACTIVE_ROUNDS}"
-elif [ "$STATUS" = "running" ]; then
-  MAIN_LINE=$(printf "🧘 %s R%d/%d" "$(format_time "$LAST_REMAINING")" "$CURRENT_ROUND" "$ACTIVE_ROUNDS")
+if [ "$STATUS" = "running" ]; then
+  MAIN_LINE=$(printf "🧘 %s R%d" "$(format_time "$LAST_REMAINING")" "$CURRENT_ROUND")
 else
   MAIN_LINE="🧘"
 fi
@@ -162,14 +139,13 @@ echo "$MAIN_LINE"
 echo "---"
 
 if [ "$STATUS" = "running" ]; then
-  echo "セット ${CURRENT_ROUND}/${ACTIVE_ROUNDS}"
+  echo "セット: ${CURRENT_ROUND}回目"
   echo "残り時間: $(format_time "$LAST_REMAINING")"
   echo "1セット: ${ACTIVE_INTERVAL}秒"
-elif [ "$STATUS" = "completed" ]; then
-  echo "すべてのセットが完了しました"
-  echo "実行設定: ${ACTIVE_INTERVAL}秒 × ${ACTIVE_ROUNDS}回"
+  echo "繰り返し: 無制限"
 else
-  echo "プリセット: ${DEFAULT_INTERVAL}秒 × ${DEFAULT_ROUNDS}回"
+  echo "プリセット: 1セット ${DEFAULT_INTERVAL}秒"
+  echo "繰り返し: 無制限"
 fi
 
 echo "---"
@@ -178,7 +154,7 @@ if [ "$STATUS" = "running" ]; then
   echo "停止 | bash='$0' param1=stop terminal=false refresh=true"
   echo "リセット | bash='$0' param1=reset terminal=false refresh=true"
 else
-  echo "開始 (${DEFAULT_INTERVAL}秒 × ${DEFAULT_ROUNDS}回) | bash='$0' param1=start terminal=false refresh=true"
+  echo "開始 (${DEFAULT_INTERVAL}秒) | bash='$0' param1=start terminal=false refresh=true"
   if [ -f "$STATE_FILE" ]; then
     echo "リセット | bash='$0' param1=reset terminal=false refresh=true"
   fi
