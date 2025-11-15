@@ -509,9 +509,15 @@ anyenv() {
 
 export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-if command -v pyenv > /dev/null; then
+
+_pyenv_init_once() {
+  unfunction _pyenv_init_once 2>/dev/null
   eval "$(pyenv init -)"
-fi
+}
+pyenv() {
+  _pyenv_init_once
+  pyenv "$@"
+}
 
 # tenv
 export TENV_AUTO_INSTALL=true
