@@ -1,3 +1,5 @@
+brew_prefix=$(brew --prefix)
+
 PROMPT="%(?.%F{blue}.%F{red})[%n@%m %~]$ %f"
 SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
 [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
@@ -6,8 +8,6 @@ PROMPT2=''
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/hioki/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
 # End of Docker CLI completions
 
 function update_prompt_for_aws_vault() {
@@ -28,10 +28,10 @@ if [ -d /opt/homebrew ]; then
 fi
 
 # postgresql
-export PATH="$(brew --prefix)/opt/libpq/bin:$PATH"
+export PATH="$brew_prefix/opt/libpq/bin:$PATH"
 
 # usbboot
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix libusb)/lib/pkgconfig"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:${brew_prefix}/opt/libusb/lib/pkgconfig"
 
 # Ruby
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
@@ -39,12 +39,12 @@ export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 # for pyenv
 export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix bzip2)/lib/pkgconfig:$(brew --prefix ncurses)/lib/pkgconfig"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:${brew_prefix}/opt/bzip2/lib/pkgconfig:${brew_prefix}/opt/ncurses/lib/pkgconfig"
 
-export OPENSSL_DIR=$(brew --prefix openssl@3)
+export OPENSSL_DIR=${brew_prefix}/opt/openssl@3
 export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/openssl@3/lib"
 export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/openssl@3/include"
-export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$(brew --prefix openssl@3)/lib/pkgconfig"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:${brew_prefix}/opt/openssl@3/lib/pkgconfig"
 
 alias la="gls -lta --human-readable --no-group --classify --color --group-directories-first"
 alias rm='trash'
@@ -61,8 +61,8 @@ export PATH="$PATH:/usr/local/opt/mosquitto/sbin:/usr/local/opt/mosquitto/bin"
 
 export PATH="$HOME/.tfenv/bin:$PATH"
 
-fpath=($(brew --prefix)/share/zsh-completions $fpath)
-fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+fpath=(${brew_prefix}/share/zsh-completions $fpath)
+fpath=(${brew_prefix}/share/zsh/site-functions $fpath)
 fpath=($HOME/.zfunc $fpath)
 
 # eval "$(rbenv init - zsh)"

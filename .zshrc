@@ -487,9 +487,6 @@ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/.local/bin"
 
-autoload -U compinit
-compinit -u
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 test -e "${HOME}/.rsyncignore" && alias rsync="rsync --exclude-from ${HOME}/.rsyncignore"
@@ -539,8 +536,6 @@ fi
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/hioki/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
 # End of Docker CLI completions
 
 # The next line updates PATH for the Google Cloud SDK.
@@ -549,6 +544,6 @@ if [ -f '/Users/hioki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/hioki/goo
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/hioki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/hioki/google-cloud-sdk/completion.zsh.inc'; fi
 
-[ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
 [ -f $HOME/.tenv.completion.zsh ] && source $HOME/.tenv.completion.zsh
+[ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
