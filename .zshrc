@@ -1,3 +1,7 @@
+source $HOME/zsh-defer/zsh-defer.plugin.zsh
+zsh-defer -c 'eval "$(anyenv init -)"; eval "$(nodenv init -)"; eval "$(pyenv init -)"'
+zsh-defer -c 'autoload -U compinit && compinit -u'
+
 TERM='screen-256color'
 
 # export LC_ALL=ja_JP.UTF-8
@@ -472,7 +476,7 @@ export GOBIN=$GOPATH/bin
 
 # Rust
 if [ -f $HOME/.cargo/env ]; then
-  source $HOME/.cargo/env
+  zsh-defer source $HOME/.cargo/env
 fi
 
 # Python
@@ -487,7 +491,7 @@ export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/.local/bin"
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+test -e "${HOME}/.iterm2_shell_integration.zsh" && zsh-defer source "${HOME}/.iterm2_shell_integration.zsh"
 
 test -e "${HOME}/.rsyncignore" && alias rsync="rsync --exclude-from ${HOME}/.rsyncignore"
 
@@ -498,26 +502,9 @@ fi
 export PATH="$HOME/.poetry/bin:$PATH"
 
 export PATH="$HOME/.anyenv/bin:$PATH"
-_anyenv_init_once() {
-  unfunction _anyenv_init_once 2>/dev/null
-  eval "$(anyenv init -)"
-}
-anyenv() {
-  _anyenv_init_once
-  anyenv "$@"
-}
 
 export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-
-_pyenv_init_once() {
-  unfunction _pyenv_init_once 2>/dev/null
-  eval "$(pyenv init -)"
-}
-pyenv() {
-  _pyenv_init_once
-  pyenv "$@"
-}
 
 # tenv
 export TENV_AUTO_INSTALL=true
@@ -526,7 +513,7 @@ export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 
 # for rye
 if [ -f "$HOME/.rye/env" ]; then
-  source "$HOME/.rye/env"
+  zsh-defer source "$HOME/.rye/env"
 fi
 
 # deno
@@ -537,7 +524,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export SKIM_DEFAULT_COMMAND="rg --files --hidden --no-ignore -g '!.git' -g '!.idea' -g '!node_modules' -g '!.venv' -g '!.terraform'"
 
 if [ -f ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
+    zsh-defer source ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
