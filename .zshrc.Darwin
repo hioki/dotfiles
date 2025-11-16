@@ -36,7 +36,7 @@ export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:${brew_prefix}/opt/libusb/lib/pkgconfig
 # Ruby
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
-# for pyenv
+# for Python
 export LDFLAGS="-L/opt/homebrew/opt/bzip2/lib -L/opt/homebrew/opt/ncurses/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/bzip2/include -I/opt/homebrew/opt/ncurses/include"
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:${brew_prefix}/opt/bzip2/lib/pkgconfig:${brew_prefix}/opt/ncurses/lib/pkgconfig"

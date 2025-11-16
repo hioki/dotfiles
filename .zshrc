@@ -1,5 +1,5 @@
 source $HOME/zsh-defer/zsh-defer.plugin.zsh
-zsh-defer -c 'eval "$(anyenv init -)"; eval "$(nodenv init -)"; eval "$(pyenv init -)"'
+zsh-defer -c 'eval "$(~/.local/bin/mise activate bash)"'
 zsh-defer -c 'autoload -U compinit && compinit -u'
 
 TERM='screen-256color'
@@ -452,6 +452,7 @@ alias vcargo="nvim ./Cargo.toml"
 alias V="nvim -R -"
 alias VV="jq . | nvim -R - -c 'set filetype=json'"
 alias w1='watch --interval 1'
+alias x="mise x --"
 alias xmllint='xmllint --format --encode utf-8'
 alias z='nvim ~/.zshrc'
 alias zl='nvim ~/.zshrc.local'
@@ -501,27 +502,10 @@ fi
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
-export PATH="$HOME/.anyenv/bin:$PATH"
-
-export PYENV_ROOT="$HOME/.anyenv/envs/pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-
 # tenv
 export TENV_AUTO_INSTALL=true
 
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
-
-# for rye
-if [ -f "$HOME/.rye/env" ]; then
-  zsh-defer source "$HOME/.rye/env"
-fi
-
-# deno
-export DENO_INSTALL="$HOME/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
-
-# https://github.com/lotabout/skim
-export SKIM_DEFAULT_COMMAND="rg --files --hidden --no-ignore -g '!.git' -g '!.idea' -g '!node_modules' -g '!.venv' -g '!.terraform'"
 
 if [ -f ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     zsh-defer source ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -532,10 +516,10 @@ fpath=(/Users/hioki/.docker/completions $fpath)
 # End of Docker CLI completions
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/hioki/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/hioki/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/hioki/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/hioki/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
 [ -f $HOME/.tenv.completion.zsh ] && source $HOME/.tenv.completion.zsh
