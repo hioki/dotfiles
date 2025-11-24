@@ -12,6 +12,6 @@ case "$yn" in
 esac
 
 mkdir -p "$HOME/.cargo"
-ln -s "$(pwd)/.cargo/config.toml" "$HOME/.cargo/config.toml"
+ln -sf "$(pwd)/.cargo/config.toml" "$HOME/.cargo/config.toml"
 
 echo "done."

@@ -11,6 +11,6 @@ case "$yn" in
     ;;
 esac
 
-ln -s "$(pwd)"/.git_template "$HOME/"
+ln -sf "$(pwd)"/.git_template "$HOME/"
 
 echo "done."

@@ -26,7 +26,7 @@ esac
 echo "creating symbolic link..."
 
 for dotfile in "${dotfiles[@]}"; do
-    ln -s "$(pwd)/$dotfile" "$HOME/$dotfile"
+    ln -sf "$(pwd)/$dotfile" "$HOME/$dotfile"
 done
 
 echo "done."
