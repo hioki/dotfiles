@@ -8,4 +8,4 @@
 
 1. `cd ~/Library/Application\ Support/xbar/`
 1. `rm -rf plugins/`
-1. `ln -s ~/ghq/github.com/hioki/dotfiles/xbar/plugins`
+1. `ln -s ~/.rhq/github.com/hioki/dotfiles/xbar/plugins`
