@@ -108,7 +108,7 @@ function fzf-branch-delete() {
 }
 
 function fzf-src() {
-  local selected_dir=$(ghq list --full-path | fzf)
+  local selected_dir=$(rhq list | fzf)
   if [ -n "$selected_dir" ]; then
     BUFFER="cd ${selected_dir}"
     zle accept-line
@@ -401,7 +401,6 @@ alias gdh='git diff --no-prefix --ignore-space-at-eol HEAD'
 alias gdhs='git diff --no-prefix --ignore-space-at-eol HEAD..stash@{0}'
 alias gempath="gem environment | grep -A 1 'GEM PATH' | tail -n 1 | tr -s ' ' | cut -d ' ' -f 3"
 alias gf='git fetch -p'
-alias gg='ghq get'
 alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
 alias gm='switch_main_branch'
 alias gmt='git mergetool --tool=vimdiff --no-prompt'
