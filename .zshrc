@@ -87,7 +87,7 @@ cdfzfrepo() {
   zle clear-screen
 }
 zle -N cdfzfrepo
-bindkey '^\^' cdfzfrepo
+bindkey '^\' cdfzfrepo
 
 function fzf-select-history() {
   local selected
@@ -314,18 +314,18 @@ calculate_average() {
     fi
 }
 
-fzfssh() {
-  local local_hosts=$(cat ~/.ssh/visited_local_hosts)
-  local private_hosts=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -Ev '^st-|^sdwire')
-  local selected_host=$(echo "${local_hosts}\n${private_hosts}" | fzf --query "$LBUFFER")
-  if [ -n "$selected_host" ]; then
-    BUFFER="ssh ${selected_host}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N fzfssh
-bindkey '^]' fzfssh
+# fzfssh() {
+#   local local_hosts=$(cat ~/.ssh/visited_local_hosts)
+#   local private_hosts=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -Ev '^st-|^sdwire')
+#   local selected_host=$(echo "${local_hosts}\n${private_hosts}" | fzf --query "$LBUFFER")
+#   if [ -n "$selected_host" ]; then
+#     BUFFER="ssh ${selected_host}"
+#     zle accept-line
+#   fi
+#   zle clear-screen
+# }
+# zle -N fzfssh
+# bindkey '^]' fzfssh
 
 
 fzfsshstsdwire() {
@@ -337,7 +337,7 @@ fzfsshstsdwire() {
   zle clear-screen
 }
 zle -N fzfsshstsdwire
-bindkey '^\' fzfsshstsdwire
+bindkey '^]' fzfsshstsdwire
 
 ssh() {
   local host="$1"
