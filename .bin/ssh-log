@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+log_file="${SSH_SESSION_LOG:-$HOME/.local/share/ssh-sessions.log}"
+
+# 最初の「宛先」以降に引数がある場合はリモートコマンド実行とみなしてログを残さない
+find_dest_index() {
+  local i=1 arg next_has_value
+  while [ $i -le $# ]; do
+    arg=${!i}
+    case "$arg" in
+      --)
+        # 次があれば宛先
+        if [ $((i + 1)) -le $# ]; then
+          echo $((i + 1))
+        fi
+        return
+        ;;
+      -[46AaCfGgKkMNnqsTtVvXxYy])
+        # 値を取らないオプション
+        ;;
+      -[BbcDEeFIiJLlmOoPpRSWwQ])
+        # 値を取るオプションなので次をスキップ
+        i=$((i + 1))
+        ;;
+      -*)
+        ;;
+      *)
+        echo $i
+        return
+        ;;
+    esac
+    i=$((i + 1))
+  done
+}
+
+if [ $# -gt 0 ]; then
+  dest_index=$(find_dest_index "$@")
+fi
+
+if [ -n "$dest_index" ] && [ $dest_index -gt 0 ]; then
+  if [ $dest_index -lt $# ]; then
+    # 宛先の後にリモートコマンドがあるのでログしない
+    exec /usr/bin/env ssh "$@"
+  fi
+else
+  # 宛先が無い場合はログを残さず ssh を呼び出す
+  exec /usr/bin/env ssh "$@"
+fi
+
+mkdir -p "$(dirname "$log_file")"
+now=$(date +"%Y-%m-%d %H:%M:%S%z")
+command_line="$*"
+command_line="${command_line%"${command_line##*[![:space:]]}"}"
+printf '%s|%s\n' "$now" "$command_line" >>"$log_file"
+
+exec /usr/bin/env ssh "$@"

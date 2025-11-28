@@ -339,18 +339,6 @@ fzfsshstsdwire() {
 zle -N fzfsshstsdwire
 bindkey '^]' fzfsshstsdwire
 
-ssh() {
-  local host="$1"
-  if [[ "$host" == *.local ]]; then
-    local file=~/.ssh/visited_local_hosts
-    [ -f "$file" ] || touch "$file"
-    if ! grep -qx "$host" "$file"; then
-        echo "$host" >> "$file"
-    fi
-  fi
-  command ssh "$@"
-}
-
 alias a="alias"
 alias c='code .'
 alias ca='cargo'

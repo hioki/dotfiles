@@ -2,7 +2,7 @@ brew_prefix=$(brew --prefix)
 
 PROMPT="%(?.%F{blue}.%F{red})[%n@%m %~]$ %f"
 SPROMPT="%{${fg[blue]}%}%r is correct? [n,y,a,e]:%{${reset_color}%} "
-[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] &&
   PROMPT="%{${fg[cyan]}%}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
 PROMPT2=''
 
@@ -65,6 +65,14 @@ fpath=(${brew_prefix}/share/zsh-completions $fpath)
 fpath=(${brew_prefix}/share/zsh/site-functions $fpath)
 fpath=($HOME/.zfunc $fpath)
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export SSH_SESSION_LOG="$HOME/.local/share/ssh-sessions.log"
+alias ssh="$HOME/.rhq/github.com/hioki/dotfiles/.bin/ssh-log"
+sshf() {
+  local log="${SSH_SESSION_LOG}"
+  [ -s "$log" ] || { echo "ログがありません"; return 1; }
+  local line entry
+  line=$(tac "$log" | fzf --delimiter='|' --with-nth=1,2) || return
+  entry="${line#*|}"
+  set -- ${(z)entry}
+  command ssh "$@"
+}
