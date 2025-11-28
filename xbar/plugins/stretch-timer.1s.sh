@@ -4,7 +4,7 @@
 # <xbar.author>hioki</xbar.author>
 # <xbar.desc>ストレッチ用のインターバルタイマー（音声通知付き）</xbar.desc>
 # <xbar.refresh>1s</xbar.refresh>
-# <xbar.var>number(VAR_INTERVAL=30): 1セットの秒数</xbar.var>
+# <xbar.var>number(VAR_INTERVAL=60): 1セットの秒数</xbar.var>
 
 STATE_FILE="$HOME/.xbar_stretch_timer"
 
@@ -45,10 +45,10 @@ format_time() {
   printf "%02d:%02d" "$minutes" "$remain"
 }
 
-DEFAULT_INTERVAL=${VAR_INTERVAL:-30}
+DEFAULT_INTERVAL=${VAR_INTERVAL:-60}
 
 if ! is_positive_int "$DEFAULT_INTERVAL"; then
-  DEFAULT_INTERVAL=30
+  DEFAULT_INTERVAL=60
 fi
 
 STATUS="stopped"
