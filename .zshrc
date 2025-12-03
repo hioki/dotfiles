@@ -11,6 +11,10 @@ TERM='screen-256color'
 autoload colors
 colors
 
+# Completion colors
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:default' menu select=2
+
 setopt auto_cd
 setopt auto_pushd
 setopt correct
