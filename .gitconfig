@@ -14,12 +14,6 @@
 [init]
   templatedir = ~/.git_template
 	defaultBranch = main
-[pager]
-	log = diff-highlight | less
-	show = diff-highlight | less
-	diff = diff-highlight | less
-[interactive]
-	diffFilter = diff-highlight
 [rebase]
 	autosquash = true
 [mergetool "fugitive"]
