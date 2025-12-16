@@ -19,3 +19,4 @@ ignore/
 **/.claude/settings.local.json
 docker-compose.override.yml
 .env-dev-local.override
+mise.toml
