@@ -14,6 +14,8 @@ elif [[ $input == "MacBook Proのマイク" ]]; then
   input=$PC
 elif [[ $input =~ "AirPods" ]]; then
   input=$AIRPODS
+elif [[ $input == "CalDigit TS4 Audio - Rear" ]]; then
+  input=$TS4
 elif [[ $input == "CalDigit TS4 Audio - Front" ]]; then
   input=$TS4
 fi
@@ -24,6 +26,8 @@ elif [[ $output == "MacBook Proのスピーカー" ]]; then
   output=$PC
 elif [[ $output =~ "AirPods" ]]; then
   output=$AIRPODS
+elif [[ $output == "CalDigit TS4 Audio - Rear" ]]; then
+  output=$TS4
 elif [[ $output == "CalDigit TS4 Audio - Front" ]]; then
   output=$TS4
 fi
