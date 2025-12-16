@@ -82,7 +82,7 @@ zle -N do_enter
 bindkey '^m' do_enter
 
 cdfzfrepo() {
-  local selected=$(echo "$WORK_REPO" | fzf)
+  local selected=$(echo "$WORK_REPO" | fzf --no-sort --nth=1)
   if [ -n "$selected" ]; then
     local repo=$(echo "$selected" | cut -f2)
     BUFFER="cd $repo"
