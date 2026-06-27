@@ -1,5 +1,5 @@
 source $HOME/zsh-defer/zsh-defer.plugin.zsh
-zsh-defer -c 'eval "$(~/.local/bin/mise activate bash)"'
+zsh-defer -c 'eval "$(~/.local/bin/mise activate zsh)"'
 zsh-defer -c 'autoload -U compinit && compinit -u'
 
 TERM='screen-256color'
@@ -352,6 +352,7 @@ alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"
 alias cov="cargo llvm-cov test --html --open"
 alias d="docker"
+alias docker-compose="docker compose"
 alias dps="docker ps -a"
 alias drm="docker rm -f P"
 alias drmi="docker image rm -f I"

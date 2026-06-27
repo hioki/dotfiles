@@ -20,3 +20,7 @@ ignore/
 docker-compose.override.yml
 .env-dev-local.override
 mise.toml
+/.claude
+Cargo.toml.new
+.psc-ide-port
+*.code-workspace
