@@ -84,3 +84,59 @@ alias gsp='git stash pop'
 alias gsc='git stash clear'
 alias gcancelcommit='git reset --soft HEAD^'
 alias gcanceladd='git restore --staged .'
+
+switch_actdk() {
+  export RUST_BACKTRACE=1
+  export RUST_LOG=DEBUG
+
+  local target_env=$1
+  local src="$HOME/.actdk/config.${target_env}.json"
+  local dest="$HOME/.actdk/config.json"
+
+  if [[ -z "$target_env" ]]; then
+    local config
+    local found=0
+    for config in "$HOME"/.actdk/config.*.json; do
+      [[ -e "$config" ]] || continue
+      config=${config##*/config.}
+      echo "${config%.json}"
+      found=1
+    done
+    if [[ "$found" -eq 0 ]]; then
+      echo "No ~/.actdk/config.*.json files found." >&2
+      return 1
+    fi
+    return 0
+  fi
+
+  if [[ ! -f "$src" ]]; then
+    echo "Error: $src does not exist."
+    return 1
+  fi
+
+  # dest がシンボリックリンクなら、リンク先が同じか確認
+  if [[ -L "$dest" ]]; then
+    local link_target
+    link_target=$(readlink "$dest")
+    # 相対リンクの場合に備えて絶対パス化
+    [[ "$link_target" != /* ]] && link_target="$HOME/.actdk/${link_target##*/}"
+    if [[ "$link_target" == "$src" ]]; then
+      echo "Already switched to '$target_env' configuration (symlink)."
+      return 0
+    fi
+  else
+    # 通常ファイルなら内容比較で同一判定
+    if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
+      echo "Already switched to '$target_env' configuration."
+      return 0
+    fi
+  fi
+
+  # シンボリックリンクを張り替える（既存がファイルでもリンクでも強制置換）
+  if ln -sfn "$src" "$dest"; then
+    echo "Switched to '$target_env' configuration (symlink -> $(basename "$src"))."
+  else
+    echo "Failed to switch configuration."
+    return 1
+  fi
+}
