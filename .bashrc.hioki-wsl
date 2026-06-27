@@ -1,0 +1,86 @@
+# Source this file from ~/.bashrc instead of replacing the generated ~/.bashrc:
+#
+#   if [ -f "$HOME/.bashrc.hioki-wsl" ]; then
+#     . "$HOME/.bashrc.hioki-wsl"
+#   fi
+
+# This file is intentionally quiet when sourced from a non-Bash shell.
+[ -n "${BASH_VERSION:-}" ] || return 0 2>/dev/null || exit 0
+
+path_append() {
+  [ -n "${1:-}" ] || return 0
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$PATH:$1" ;;
+  esac
+}
+
+path_prepend() {
+  [ -n "${1:-}" ] || return 0
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
+
+# Environment
+export EDITOR="${EDITOR:-vim}"
+
+path_append "$HOME/bin"
+path_append "$HOME/.local/bin"
+
+# History behavior close to the zsh defaults in this repository.
+export HISTSIZE="${HISTSIZE:-50000}"
+export HISTFILESIZE="${HISTFILESIZE:-50000}"
+export HISTCONTROL="${HISTCONTROL:-ignoredups:ignorespace}"
+shopt -s histappend
+
+# Colors for standard Ubuntu tools.
+if command -v dircolors >/dev/null 2>&1; then
+  eval "$(dircolors -b)"
+fi
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias less='less -R'
+alias df='df -h'
+alias du='du -h'
+
+# Navigation
+alias h='cd ..'
+alias hh='cd ../..'
+alias hhh='cd ../../..'
+alias u='popd'
+
+mkcd() {
+  mkdir -p "$@" && cd "${@: -1}" || return
+}
+
+if command -v vim >/dev/null 2>&1; then
+  alias v='vim'
+  alias vi='vim'
+  alias V='vim -R -'
+fi
+
+# Git
+alias ga='git add'
+alias gc='git commit'
+alias cg='git commit'
+alias gco='git checkout'
+alias gcoh='git checkout HEAD'
+alias gconf='git config -l'
+alias gd='git diff --no-prefix'
+alias gdw='git diff --no-prefix --ignore-space-change'
+alias gdc='git diff --cached --no-prefix'
+alias gdcw='git diff --cached --no-prefix --ignore-space-change'
+alias gf='git fetch -p'
+alias gl='git log --graph --all --format="%x09%C(cyan bold)%an%Creset%x09%C(blue)%h%Creset %C(magenta reverse)%d%Creset %s"'
+alias gp='git pull origin $(git branch --show-current)'
+alias gs='git show'
+alias gsn='git show --name-only'
+alias gas='git add . && git stash'
+alias gsp='git stash pop'
+alias gsc='git stash clear'
+alias gcancelcommit='git reset --soft HEAD^'
+alias gcanceladd='git restore --staged .'
