@@ -57,6 +57,61 @@ mkcd() {
   mkdir -p "$@" && cd "${@: -1}" || return
 }
 
+__hioki_empty_enter_status() {
+  local last_status=$?
+
+  [[ $- == *i* ]] || return "$last_status"
+
+  if [[ "${__hioki_empty_enter_seen_prompt:-0}" -eq 0 ]]; then
+    __hioki_empty_enter_seen_prompt=1
+    __hioki_empty_enter_last_histcmd=$HISTCMD
+    return "$last_status"
+  fi
+
+  if [[ "${__hioki_empty_enter_last_histcmd:-}" == "$HISTCMD" ]]; then
+    echo
+    ls
+    if [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" == "true" ]]; then
+      echo
+      echo -e "\e[0;33m--- git status ---\e[0m"
+      git status -sb
+    fi
+  fi
+
+  __hioki_empty_enter_last_histcmd=$HISTCMD
+  return "$last_status"
+}
+
+__hioki_add_prompt_command() {
+  local command=$1
+  local prompt_command_decl
+
+  prompt_command_decl=$(declare -p PROMPT_COMMAND 2>/dev/null)
+  case "$prompt_command_decl" in
+  declare\ -a*|declare\ -ax*)
+    local existing
+    for existing in "${PROMPT_COMMAND[@]}"; do
+      [[ "$existing" == "$command" ]] && return 0
+    done
+    PROMPT_COMMAND+=("$command")
+    ;;
+  *)
+    [[ "${PROMPT_COMMAND:-}" == *"$command"* ]] && return 0
+    if [[ -n "${PROMPT_COMMAND:-}" ]]; then
+      PROMPT_COMMAND="${PROMPT_COMMAND}"$'\n'"$command"
+    else
+      PROMPT_COMMAND="$command"
+    fi
+    ;;
+  esac
+}
+
+if [[ $- == *i* ]]; then
+  __hioki_empty_enter_seen_prompt=0
+  __hioki_empty_enter_last_histcmd=$HISTCMD
+  __hioki_add_prompt_command __hioki_empty_enter_status
+fi
+
 if command -v vim >/dev/null 2>&1; then
   alias v='vim'
   alias vi='vim'
