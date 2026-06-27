@@ -69,7 +69,6 @@ __hioki_empty_enter_status() {
   fi
 
   if [[ "${__hioki_empty_enter_last_histcmd:-}" == "$HISTCMD" ]]; then
-    echo
     ls
     if [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" == "true" ]]; then
       echo
