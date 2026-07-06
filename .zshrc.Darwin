@@ -59,6 +59,8 @@ alias cheatsheet="jq -r '.rules[] | .description' < \"$HOME/.rhq/github.com/hiok
 # alias ls="exa"
 alias l="exa -ahl --git"
 alias grep="ggrep"
+alias GD="git -c core.pager=delta -c delta.side-by-side=true diff"
+alias GDC="git -c core.pager=delta -c delta.side-by-side=true diff --cached"
 alias awk="gawk"
 
 function notify_done() { osascript -e 'display notification "done"' }

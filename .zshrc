@@ -331,18 +331,6 @@ calculate_average() {
 # zle -N fzfssh
 # bindkey '^]' fzfssh
 
-
-fzfsshstsdwire() {
-  local selected_host=$(grep --no-filename -oP '(?<=^Host ).*' ~/.ssh/config.d/* | grep -E '^st-|^sdwire' | fzf --query "$LBUFFER")
-  if [ -n "$selected_host" ]; then
-    BUFFER="ssh ${selected_host}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N fzfsshstsdwire
-bindkey '^]' fzfsshstsdwire
-
 alias a="alias"
 alias c='code .'
 alias ca='cargo'
