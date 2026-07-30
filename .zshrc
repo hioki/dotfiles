@@ -334,7 +334,7 @@ calculate_average() {
 alias a="alias"
 alias c='code .'
 alias ca='cargo'
-alias cr='cargo run --quiet'
+alias cr='cargo run'
 alias cb='cargo watch -x build'
 alias checkip='curl -s checkip.amazonaws.com'
 alias cutn="cut -d' ' -f$1"

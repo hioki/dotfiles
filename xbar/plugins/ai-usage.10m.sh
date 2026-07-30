@@ -9,20 +9,20 @@
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 # --- 閾値 (利用率 %) -------------------------------------------------
-WARN=70    # 🟡 注意
+WARN=70    # 🟠 注意
 CRIT=90    # 🔴 危険
 # --------------------------------------------------------------------
 
 sig() {   # 利用率(整数) -> 信号絵文字
   local p=${1:-0}
   if   [ "$p" -ge "$CRIT" ]; then echo "🔴"
-  elif [ "$p" -ge "$WARN" ]; then echo "🟡"
+  elif [ "$p" -ge "$WARN" ]; then echo "🟠"
   else echo "🟢"; fi
 }
 clr() {   # 利用率(整数) -> xbar の color 指定 (normal は空)
   local p=${1:-0}
   if   [ "$p" -ge "$CRIT" ]; then echo "red"
-  elif [ "$p" -ge "$WARN" ]; then echo "orange"; fi
+  elif [ "$p" -ge "$WARN" ]; then echo "#6c3300"; fi
 }
 fmt_dur() {   # 残り秒 -> "1d2h" / "2h30m" / "45m"
   local s=${1:-0}
