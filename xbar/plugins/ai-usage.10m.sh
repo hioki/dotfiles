@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# <xbar.title>AI Usage (Claude Code / Codex)</xbar.title>
+# <xbar.title>AI Usage (Claude Code / Codex / Copilot)</xbar.title>
 # <xbar.version>v1.1</xbar.version>
 # <xbar.author>hioki</xbar.author>
-# <xbar.desc>Claude Code と Codex のレート利用率を表示し、上限に近づく前に気づけるようにする</xbar.desc>
+# <xbar.desc>Claude Code / Codex / GitHub Copilot のレート利用率を表示し、上限に近づく前に気づけるようにする</xbar.desc>
 # <xbar.dependencies>jq,curl,codex-cli</xbar.dependencies>
 
 # xbar は最小 PATH で起動されるため homebrew を通す
@@ -177,14 +177,58 @@ if [ -n "$xj" ] && [ "$xj" != "null" ]; then
   fi
 fi
 
+# ==== GitHub Copilot ================================================
+gtok=$(jq -r 'to_entries[0].value.oauth_token // empty' "$HOME/.config/github-copilot/apps.json" 2>/dev/null)
+
+cop_ok=0; gmax=0; gplan=""; gorg=""; greset=""; gchat="∞"; gcomp="∞"; gprem="∞"; gprem_cr=0
+if [ -n "$gtok" ]; then
+  gj=$(curl -s --max-time 8 "https://api.github.com/copilot_internal/user" \
+        -H "Authorization: Bearer $gtok" \
+        -H "Editor-Version: vscode/1.96.0" \
+        -H "User-Agent: GithubCopilot/1.155.0" \
+        -H "Accept: application/json")
+  if echo "$gj" | jq -e '.quota_snapshots' >/dev/null 2>&1; then
+    cop_ok=1
+    # unlimited なら "∞"、それ以外は used% (100 - percent_remaining)。区切りはパイプ。
+    IFS='|' read -r gplan gorg greset_iso gchat gcomp gprem gprem_cr <<<"$(echo "$gj" | jq -r '
+      def u($q): (.quota_snapshots[$q] // {})
+        | if .unlimited == true then "∞"
+          else ((100 - (.percent_remaining // 100)) | round | tostring) end;
+      [ .copilot_plan // "-",
+        (.organization_login_list[0] // "-"),
+        (.quota_reset_date_utc // "-"),
+        u("chat"), u("completions"), u("premium_interactions"),
+        ((.quota_snapshots.premium_interactions.credits_used // 0) | tostring)
+      ] | join("|")')"
+    gmax=0
+    for v in "$gchat" "$gcomp" "$gprem"; do
+      [ "$v" != "∞" ] && [ "$v" -gt "$gmax" ] 2>/dev/null && gmax=$v
+    done
+    # リセットまでの残り時間 (quota_reset_date_utc: ISO8601)
+    if [ "$greset_iso" != "-" ] && [ -n "$greset_iso" ]; then
+      gre=$(echo "$greset_iso" | jq -rR 'sub("\\.[0-9]+";"") | sub("Z$";"") | sub("[+-][0-9:]+$";"")
+                                       | strptime("%Y-%m-%dT%H:%M:%S") | mktime' 2>/dev/null)
+      [ -n "$gre" ] && greset="  ↻$(fmt_dur $((gre-now)))"
+    fi
+  fi
+fi
+
 # ==== メニューバー行 =================================================
 if [ "$claude_ok" = 1 ]; then c_seg="$(sig "$cmax")C${cmax}%"; else c_seg="⚠️C"; fi
 if [ "$codex_ok"  = 1 ]; then x_seg="$(sig "$xmax")X${xmax}%"; else x_seg="⚠️X"; fi
+if [ "$cop_ok"    = 1 ]; then
+  if [ "$gchat" = "∞" ] && [ "$gcomp" = "∞" ] && [ "$gprem" = "∞" ]; then
+    g_seg="🟢G∞"
+  else
+    g_seg="$(sig "$gmax")G${gmax}%"
+  fi
+else g_seg="⚠️G"; fi
 
 overall=$(( cmax > xmax ? cmax : xmax ))
+overall=$(( overall > gmax ? overall : gmax ))
 line_color=""
 lc=$(clr "$overall"); [ -n "$lc" ] && line_color="| color=$lc"
-echo "$c_seg $x_seg $line_color"
+echo "$c_seg $x_seg $g_seg $line_color"
 
 echo "---"
 
@@ -234,6 +278,26 @@ if [ "$codex_ok" = 1 ]; then
   done <<<"$xrows"
 else
   echo "⚠️ 取得失敗 (codex app-server 応答なし) | color=red"
+fi
+
+echo "---"
+
+# ==== ドロップダウン: GitHub Copilot =================================
+echo "GitHub Copilot | href=https://github.com/settings/copilot"
+if [ "$cop_ok" = 1 ]; then
+  echo "$gplan${gorg:+ ($gorg)} | color=gray"
+  grow() {   # $1:名前 $2:"used%" または "∞" $3:追記文字列
+    local name=$1 v=$2 extra=$3 num=0 disp col cp=""
+    [ "$v" != "∞" ] && num=$v
+    if [ "$v" = "∞" ]; then disp=$(printf "%4s" "∞"); else disp=$(printf "%3s%%" "$v"); fi
+    col=$(clr "$num"); [ -n "$col" ] && cp="| color=$col"
+    printf -- "%s %-16s %s%s %s\n" "$(sig "$num")" "$name" "$disp" "$extra" "$cp"
+  }
+  grow "Chat"            "$gchat" ""
+  grow "Completions"     "$gcomp" ""
+  grow "Premium requests" "$gprem" "  (${gprem_cr} req)$greset"
+else
+  echo "⚠️ 取得失敗 (apps.json なし / トークン失効?) | color=red"
 fi
 
 echo "---"
