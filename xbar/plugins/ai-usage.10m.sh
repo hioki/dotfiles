@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # <xbar.title>AI Usage (Claude Code / Codex / Copilot)</xbar.title>
-# <xbar.version>v1.0</xbar.version>
+# <xbar.version>v1.1</xbar.version>
 # <xbar.author>hioki</xbar.author>
 # <xbar.desc>Claude Code / Codex / GitHub Copilot のレート利用率を表示し、上限に近づく前に気づけるようにする</xbar.desc>
 # <xbar.dependencies>jq,curl,codex-cli</xbar.dependencies>
@@ -9,20 +9,33 @@
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 # --- 閾値 (利用率 %) -------------------------------------------------
-WARN=70    # 🟡 注意
+WARN=70    # 🟠 注意
 CRIT=90    # 🔴 危険
+# --------------------------------------------------------------------
+
+# --- Claude Code の OAuth 情報 ---------------------------------------
+# アクセストークンは約8時間で失効し、Claude Code 本体が動いていないと更新
+# されない。放置すると usage API が 401 を返し続けるため、失効時はこの
+# プラグイン側で refreshToken を使って再発行し、書き戻す。
+KC_SERVICE="Claude Code-credentials"
+CRED_FILE="$HOME/.claude/.credentials.json"
+STATE_DIR="$HOME/.config/ai-usage"
+USAGE_URL="https://api.anthropic.com/api/oauth/usage"
+OAUTH_TOKEN_URL="https://api.anthropic.com/v1/oauth/token"
+OAUTH_CLIENT_ID="9d1c250a-e61b-44d9-88ed-5944d1962f5e"
+OAUTH_BETA="oauth-2025-04-20"
 # --------------------------------------------------------------------
 
 sig() {   # 利用率(整数) -> 信号絵文字
   local p=${1:-0}
   if   [ "$p" -ge "$CRIT" ]; then echo "🔴"
-  elif [ "$p" -ge "$WARN" ]; then echo "🟡"
+  elif [ "$p" -ge "$WARN" ]; then echo "🟠"
   else echo "🟢"; fi
 }
 clr() {   # 利用率(整数) -> xbar の color 指定 (normal は空)
   local p=${1:-0}
   if   [ "$p" -ge "$CRIT" ]; then echo "red"
-  elif [ "$p" -ge "$WARN" ]; then echo "orange"; fi
+  elif [ "$p" -ge "$WARN" ]; then echo "#6c3300"; fi
 }
 fmt_dur() {   # 残り秒 -> "1d2h" / "2h30m" / "45m"
   local s=${1:-0}
@@ -32,24 +45,110 @@ fmt_dur() {   # 残り秒 -> "1d2h" / "2h30m" / "45m"
   elif [ "$h" -gt 0 ]; then echo "${h}h${m}m"
   else echo "${m}m"; fi
 }
+win_label() {   # 窓の長さ(分) -> "5時間" / "7日"
+  local m=${1:-0}
+  if   [ "$m" -le 0 ];          then echo "?"
+  elif [ $((m % 1440)) -eq 0 ]; then echo "$((m/1440))日"
+  elif [ $((m % 60))   -eq 0 ]; then echo "$((m/60))時間"
+  else echo "${m}分"; fi
+}
 
 now=$(date +%s)
+now_ms=$((now * 1000))
 
 # ==== Claude Code ===================================================
-tok=$(jq -r '.claudeAiOauth.accessToken // empty' "$HOME/.claude/.credentials.json" 2>/dev/null)
-[ -z "$tok" ] && tok=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null \
-                        | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null)
+# 認証情報はファイル優先、無ければ keychain から読む
+cred_src=""; creds=""
+if [ -s "$CRED_FILE" ]; then
+  creds=$(cat "$CRED_FILE" 2>/dev/null); cred_src="file"
+fi
+if ! jq -e '.claudeAiOauth.accessToken' <<<"$creds" >/dev/null 2>&1; then
+  creds=$(security find-generic-password -s "$KC_SERVICE" -w 2>/dev/null); cred_src="keychain"
+fi
 
-claude_ok=0; cmax=0; cj=""
+save_creds() {   # $1: 更新後の認証情報 JSON。書き戻し前に旧値を退避する
+  local json="$1" acct back
+  mkdir -p "$STATE_DIR" 2>/dev/null && chmod 700 "$STATE_DIR" 2>/dev/null
+  printf '%s' "$creds" > "$STATE_DIR/credentials.prev.json" || return 1
+  chmod 600 "$STATE_DIR/credentials.prev.json" 2>/dev/null
+  if [ "$cred_src" = "file" ]; then
+    printf '%s' "$json" > "$CRED_FILE" || return 1
+    chmod 600 "$CRED_FILE" 2>/dev/null
+    back=$(cat "$CRED_FILE" 2>/dev/null)
+  else
+    # keychain の acct 属性は Claude Code が作ったものをそのまま使う
+    acct=$(security find-generic-password -s "$KC_SERVICE" 2>/dev/null \
+            | awk -F'"' '/"acct"<blob>=/ {print $4}')
+    [ -z "$acct" ] && acct="$USER"
+    security add-generic-password -U -s "$KC_SERVICE" -a "$acct" -w "$json" 2>/dev/null || return 1
+    back=$(security find-generic-password -s "$KC_SERVICE" -w 2>/dev/null)
+  fi
+  # 読み直して実際に反映されたか確認する
+  [ "$(jq -r '.claudeAiOauth.accessToken // empty' <<<"$back" 2>/dev/null)" \
+      = "$(jq -r '.claudeAiOauth.accessToken // empty' <<<"$json" 2>/dev/null)" ]
+}
+
+refresh_creds() {   # refreshToken でアクセストークンを再発行する
+  local rt resp at new
+  rt=$(jq -r '.claudeAiOauth.refreshToken // empty' <<<"$creds" 2>/dev/null)
+  [ -z "$rt" ] && { claude_err="リフレッシュ不可: refreshToken なし"; return 1; }
+  resp=$(curl -s --max-time 15 "$OAUTH_TOKEN_URL" \
+          -H 'Content-Type: application/json' \
+          -H "anthropic-beta: $OAUTH_BETA" \
+          -d "$(jq -nc --arg rt "$rt" --arg cid "$OAUTH_CLIENT_ID" \
+                '{grant_type:"refresh_token",refresh_token:$rt,client_id:$cid}')")
+  at=$(jq -r '.access_token // empty' <<<"$resp" 2>/dev/null)
+  if [ -z "$at" ]; then
+    claude_err="リフレッシュ失敗: $(jq -r '.error // "応答不正"' <<<"$resp" 2>/dev/null) → claude auth login"
+    return 1
+  fi
+  new=$(jq -c --argjson r "$resp" --argjson now "$now_ms" '
+    .claudeAiOauth.accessToken    = $r.access_token
+    | .claudeAiOauth.refreshToken = ($r.refresh_token // .claudeAiOauth.refreshToken)
+    | .claudeAiOauth.expiresAt    = ($now + ((($r.expires_in // 28800) | floor) * 1000))
+    | .claudeAiOauth.scopes       = (if ($r.scope // "") == "" then .claudeAiOauth.scopes
+                                     else ($r.scope | split(" ")) end)' <<<"$creds" 2>/dev/null)
+  [ -z "$new" ] && { claude_err="リフレッシュ失敗: 認証情報の更新に失敗"; return 1; }
+  # 保存に失敗しても今回の取得には使えるので、警告だけ残して続行する
+  save_creds "$new" || claude_err="保存失敗 (旧値: $STATE_DIR/credentials.prev.json)"
+  creds="$new"; tok="$at"
+}
+
+call_usage() {   # usage API を叩いて cj / chttp を埋める
+  local out
+  out=$(curl -s -w '\n%{http_code}' --max-time 10 "$USAGE_URL" \
+        -H "Authorization: Bearer $tok" -H "anthropic-beta: $OAUTH_BETA")
+  chttp=$(printf '%s' "$out" | tail -1)
+  cj=$(printf '%s' "$out" | sed '$d')
+}
+
+claude_ok=0; cmax=0; cj=""; chttp=""; claude_err=""; tok=""; exp_ms=0
+if jq -e '.claudeAiOauth.accessToken' <<<"$creds" >/dev/null 2>&1; then
+  tok=$(jq -r '.claudeAiOauth.accessToken' <<<"$creds")
+  exp_ms=$(jq -r '(.claudeAiOauth.expiresAt // 0) | floor' <<<"$creds")
+else
+  claude_err="未ログイン → claude auth login"
+fi
+
 if [ -n "$tok" ]; then
-  cj=$(curl -s --max-time 10 "https://api.anthropic.com/api/oauth/usage" \
-        -H "Authorization: Bearer $tok" \
-        -H "anthropic-beta: oauth-2025-04-20")
-  if echo "$cj" | jq -e '.five_hour' >/dev/null 2>&1; then
+  # 失効 (1分前を含む) なら先に再発行しておく。
+  # AI_USAGE_FORCE_REFRESH=1 を付けるとリフレッシュ経路を手動で試せる。
+  if [ -n "$AI_USAGE_FORCE_REFRESH" ] ||
+     { [ "$exp_ms" -gt 0 ] && [ "$now_ms" -ge $((exp_ms - 60000)) ]; }; then
+    refresh_creds
+  fi
+  call_usage
+  # 期限内のはずでも弾かれたら一度だけ再発行して再試行する
+  if [ "$chttp" = "401" ] || [ "$chttp" = "403" ]; then
+    refresh_creds && call_usage
+  fi
+  if [ "$chttp" = "200" ] && jq -e '.limits' <<<"$cj" >/dev/null 2>&1; then
     claude_ok=1
-    cmax=$(echo "$cj" | jq -r '
+    cmax=$(jq -r '
       ([.limits[]?.percent] + [.five_hour.utilization, .seven_day.utilization]
-       | map(select(. != null)) | max // 0) | round')
+       | map(select(. != null)) | max // 0) | round' <<<"$cj")
+  elif [ -z "$claude_err" ]; then
+    claude_err="HTTP ${chttp:-応答なし}"
   fi
 fi
 
@@ -60,12 +159,22 @@ xj=$( { printf '%s\n' \
     sleep 5
   } | codex app-server 2>/dev/null | jq -c 'select(.id==2).result.rateLimits' 2>/dev/null | head -1 )
 
-codex_ok=0; xmax=0; xp=0; xs=0
+codex_ok=0; xmax=0; xrows=""
 if [ -n "$xj" ] && [ "$xj" != "null" ]; then
-  codex_ok=1
-  xp=$(echo "$xj" | jq -r '(.primary.usedPercent   // 0) | round')
-  xs=$(echo "$xj" | jq -r '(.secondary.usedPercent // 0) | round')
-  xmax=$(( xp > xs ? xp : xs ))
+  # primary/secondary のどちらが5時間窓/週窓かはプラン次第で、片方 null もある。
+  # 窓の長さ (windowDurationMins) から判断し、短い窓から並べる。
+  xrows=$(jq -r '
+    [.primary, .secondary] | map(select(type == "object"))
+    | sort_by(.windowDurationMins // 0)
+    | .[] | [ ((.windowDurationMins // 0) | floor),
+              ((.usedPercent // 0) | round),
+              ((.resetsAt // 0) | floor) ] | map(tostring) | join("|")' <<<"$xj" 2>/dev/null)
+  if [ -n "$xrows" ]; then
+    codex_ok=1
+    while IFS='|' read -r w p r; do
+      [ "${p:-0}" -gt "$xmax" ] && xmax=$p
+    done <<<"$xrows"
+  fi
 fi
 
 # ==== GitHub Copilot ================================================
@@ -150,8 +259,12 @@ if [ "$claude_ok" = 1 ]; then
       col=$(clr "$pct"); cp=""; [ -n "$col" ] && cp="| color=$col"
       printf -- "%s %-16s %3s%%%s %s\n" "$(sig "$pct")" "$name$star" "$pct" "$rem" "$cp"
     done
+  # 取得はできていても書き戻しだけ失敗しているケースがあるので出しておく
+  [ -n "$claude_err" ] && echo "⚠️ $claude_err | color=red"
 else
-  echo "⚠️ 取得失敗 (未ログイン / トークン失効?) | color=red"
+  exp_note=""
+  [ "$exp_ms" -gt 0 ] && exp_note=" / 期限 $(date -r $((exp_ms/1000)) '+%m-%d %H:%M')"
+  echo "⚠️ 取得失敗: ${claude_err:-原因不明}$exp_note | color=red"
 fi
 
 echo "---"
@@ -159,16 +272,11 @@ echo "---"
 # ==== ドロップダウン: Codex =========================================
 echo "Codex"
 if [ "$codex_ok" = 1 ]; then
-  xpr=$(echo "$xj" | jq -r '.primary.resetsAt   // empty')
-  xsr=$(echo "$xj" | jq -r '.secondary.resetsAt // empty')
-  xpw=$(echo "$xj" | jq -r '(.primary.windowDurationMins   // 0)')
-  xsw=$(echo "$xj" | jq -r '(.secondary.windowDurationMins // 0)')
-  pr=""; [ -n "$xpr" ] && pr="  ↻$(fmt_dur $((xpr-now)))"
-  sr=""; [ -n "$xsr" ] && sr="  ↻$(fmt_dur $((xsr-now)))"
-  cp=$(clr "$xp"); cpp=""; [ -n "$cp" ] && cpp="| color=$cp"
-  cs=$(clr "$xs"); css=""; [ -n "$cs" ] && css="| color=$cs"
-  printf -- "%s %-16s %3s%%%s %s\n" "$(sig "$xp")" "5時間($((xpw/60))h)"  "$xp" "$pr" "$cpp"
-  printf -- "%s %-16s %3s%%%s %s\n" "$(sig "$xs")" "週($((xsw/1440))d)"   "$xs" "$sr" "$css"
+  while IFS='|' read -r w p r; do
+    rem=""; [ "${r:-0}" -gt 0 ] && rem="  ↻$(fmt_dur $((r-now)))"
+    col=$(clr "$p"); cp=""; [ -n "$col" ] && cp="| color=$col"
+    printf -- "%s %-16s %3s%%%s %s\n" "$(sig "$p")" "$(win_label "$w")" "$p" "$rem" "$cp"
+  done <<<"$xrows"
 else
   echo "⚠️ 取得失敗 (codex app-server 応答なし) | color=red"
 fi

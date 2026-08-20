@@ -24,3 +24,4 @@ mise.toml
 Cargo.toml.new
 .psc-ide-port
 *.code-workspace
+/.codex
