@@ -180,7 +180,8 @@ fi
 # ==== GitHub Copilot ================================================
 gtok=$(jq -r 'to_entries[0].value.oauth_token // empty' "$HOME/.config/github-copilot/apps.json" 2>/dev/null)
 
-cop_ok=0; gmax=0; gplan=""; gorg=""; greset=""; gchat="∞"; gcomp="∞"; gprem="∞"; gprem_cr=0
+cop_ok=0; gmax=0; gplan=""; gorg=""; greset=""; gchat="∞"; gcomp="∞"; gprem=0; gprem_cr=0
+GPREM_LIMIT=1900   # premium requests は月1900を超えると都度課金
 if [ -n "$gtok" ]; then
   gj=$(curl -s --max-time 8 "https://api.github.com/copilot_internal/user" \
         -H "Authorization: Bearer $gtok" \
@@ -189,19 +190,23 @@ if [ -n "$gtok" ]; then
         -H "Accept: application/json")
   if echo "$gj" | jq -e '.quota_snapshots' >/dev/null 2>&1; then
     cop_ok=1
-    # unlimited なら "∞"、それ以外は used% (100 - percent_remaining)。区切りはパイプ。
-    IFS='|' read -r gplan gorg greset_iso gchat gcomp gprem gprem_cr <<<"$(echo "$gj" | jq -r '
+    # chat/completions は unlimited なら "∞"、それ以外は used% (100 - percent_remaining)。
+    # premium は API が unlimited を返しても実際は月1900を超えると都度課金なので、
+    # credits_used / 1900 で使用率を計算する。区切りはパイプ。
+    IFS='|' read -r gplan gorg greset_iso gchat gcomp gprem gprem_cr <<<"$(echo "$gj" | jq -r --argjson lim "$GPREM_LIMIT" '
       def u($q): (.quota_snapshots[$q] // {})
         | if .unlimited == true then "∞"
           else ((100 - (.percent_remaining // 100)) | round | tostring) end;
-      [ .copilot_plan // "-",
-        (.organization_login_list[0] // "-"),
-        (.quota_reset_date_utc // "-"),
-        u("chat"), u("completions"), u("premium_interactions"),
-        ((.quota_snapshots.premium_interactions.credits_used // 0) | tostring)
-      ] | join("|")')"
-    gmax=0
-    for v in "$gchat" "$gcomp" "$gprem"; do
+      ((.quota_snapshots.premium_interactions.credits_used // 0)) as $cr
+      | [ .copilot_plan // "-",
+          (.organization_login_list[0] // "-"),
+          (.quota_reset_date_utc // "-"),
+          u("chat"), u("completions"),
+          (($cr * 100 / $lim) | round | tostring),
+          ($cr | tostring)
+        ] | join("|")')"
+    gmax=$gprem
+    for v in "$gchat" "$gcomp"; do
       [ "$v" != "∞" ] && [ "$v" -gt "$gmax" ] 2>/dev/null && gmax=$v
     done
     # リセットまでの残り時間 (quota_reset_date_utc: ISO8601)
@@ -217,11 +222,7 @@ fi
 if [ "$claude_ok" = 1 ]; then c_seg="$(sig "$cmax")C${cmax}%"; else c_seg="⚠️C"; fi
 if [ "$codex_ok"  = 1 ]; then x_seg="$(sig "$xmax")X${xmax}%"; else x_seg="⚠️X"; fi
 if [ "$cop_ok"    = 1 ]; then
-  if [ "$gchat" = "∞" ] && [ "$gcomp" = "∞" ] && [ "$gprem" = "∞" ]; then
-    g_seg="🟢G∞"
-  else
-    g_seg="$(sig "$gmax")G${gmax}%"
-  fi
+  g_seg="$(sig "$gmax")G${gmax}%"
 else g_seg="⚠️G"; fi
 
 overall=$(( cmax > xmax ? cmax : xmax ))
@@ -295,7 +296,7 @@ if [ "$cop_ok" = 1 ]; then
   }
   grow "Chat"            "$gchat" ""
   grow "Completions"     "$gcomp" ""
-  grow "Premium requests" "$gprem" "  (${gprem_cr} req)$greset"
+  grow "Premium requests" "$gprem" "  (${gprem_cr}/${GPREM_LIMIT} req)$greset"
 else
   echo "⚠️ 取得失敗 (apps.json なし / トークン失効?) | color=red"
 fi
