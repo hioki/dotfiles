@@ -219,17 +219,31 @@ if [ -n "$gtok" ]; then
 fi
 
 # ==== メニューバー行 =================================================
-if [ "$claude_ok" = 1 ]; then c_seg="$(sig "$cmax")C${cmax}%"; else c_seg="⚠️C"; fi
-if [ "$codex_ok"  = 1 ]; then x_seg="$(sig "$xmax")X${xmax}%"; else x_seg="⚠️X"; fi
+if [ "$codex_ok"  = 1 ]; then x_seg="$(sig "$xmax")${xmax}%"; else x_seg="⚠️"; fi
+if [ "$claude_ok" = 1 ]; then c_seg="$(sig "$cmax")${cmax}%"; else c_seg="⚠️"; fi
 if [ "$cop_ok"    = 1 ]; then
-  g_seg="$(sig "$gmax")G${gmax}%"
-else g_seg="⚠️G"; fi
+  g_seg="$(sig "$gmax")${gmax}%"
+else g_seg="⚠️"; fi
 
 overall=$(( cmax > xmax ? cmax : xmax ))
 overall=$(( overall > gmax ? overall : gmax ))
 line_color=""
 lc=$(clr "$overall"); [ -n "$lc" ] && line_color="| color=$lc"
-echo "$c_seg $x_seg $g_seg $line_color"
+echo "$x_seg $c_seg $g_seg $line_color"
+
+echo "---"
+
+# ==== ドロップダウン: Codex =========================================
+echo "Codex"
+if [ "$codex_ok" = 1 ]; then
+  while IFS='|' read -r w p r; do
+    rem=""; [ "${r:-0}" -gt 0 ] && rem="  ↻$(fmt_dur $((r-now)))"
+    col=$(clr "$p"); cp=""; [ -n "$col" ] && cp="| color=$col"
+    printf -- "%s %-16s %3s%%%s %s\n" "$(sig "$p")" "$(win_label "$w")" "$p" "$rem" "$cp"
+  done <<<"$xrows"
+else
+  echo "⚠️ 取得失敗 (codex app-server 応答なし) | color=red"
+fi
 
 echo "---"
 
@@ -265,20 +279,6 @@ else
   exp_note=""
   [ "$exp_ms" -gt 0 ] && exp_note=" / 期限 $(date -r $((exp_ms/1000)) '+%m-%d %H:%M')"
   echo "⚠️ 取得失敗: ${claude_err:-原因不明}$exp_note | color=red"
-fi
-
-echo "---"
-
-# ==== ドロップダウン: Codex =========================================
-echo "Codex"
-if [ "$codex_ok" = 1 ]; then
-  while IFS='|' read -r w p r; do
-    rem=""; [ "${r:-0}" -gt 0 ] && rem="  ↻$(fmt_dur $((r-now)))"
-    col=$(clr "$p"); cp=""; [ -n "$col" ] && cp="| color=$col"
-    printf -- "%s %-16s %3s%%%s %s\n" "$(sig "$p")" "$(win_label "$w")" "$p" "$rem" "$cp"
-  done <<<"$xrows"
-else
-  echo "⚠️ 取得失敗 (codex app-server 応答なし) | color=red"
 fi
 
 echo "---"
