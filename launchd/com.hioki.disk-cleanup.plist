@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hioki.disk-cleanup</string>
+
+  <!-- launchd は ProgramArguments や StandardOutPath の $HOME を展開しない。
+       bash を挟むことで plist をマシン非依存に保つ。 -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>log="$HOME/Library/Logs/disk-cleanup.log"; { echo; echo "===== $(date '+%Y-%m-%d %H:%M:%S') ====="; "$HOME/.rhq/github.com/hioki/dotfiles/.bin/disk-cleanup.bash" --apply; } &gt;&gt; "$log" 2&gt;&amp;1</string>
+  </array>
+
+  <!-- 毎月 1 日の 12:00。スリープ中なら次の起床時に一度だけ実行される。 -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Day</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>12</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <!-- 前面の作業を邪魔しないよう I/O と CPU の優先度を下げる。 -->
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+  <key>Nice</key>
+  <integer>10</integer>
+</dict>
+</plist>

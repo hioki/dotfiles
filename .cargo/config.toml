@@ -1,2 +1,12 @@
 [net]
 git-fetch-with-cli = true
+
+[build]
+# ビルド成果物をリポジトリごとの target/ に散らさず 1 箇所へ集約する。
+# 掃除と容量計測の対象が 1 箇所で済み、依存クレートのビルド結果も
+# プロジェクト間で共有される。
+#
+# 相対パスは config.toml が置かれたディレクトリの親、つまり $HOME を基準に
+# 解決される（cargo は ~ や環境変数を展開しないため、この書き方で
+# macOS と Linux の両方に対応する）。
+target-dir = ".cache/cargo-target"
