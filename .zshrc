@@ -64,7 +64,7 @@ function o(){
 }
 
 function do_enter() {
-  if [ -n "$BUFFER" ]; then
+  if [[ -n "$BUFFER" ]] || (( KEYS_QUEUED_COUNT > 0 || PENDING > 0 )); then
     zle accept-line
     return 0
   fi
@@ -80,6 +80,29 @@ function do_enter() {
 }
 zle -N do_enter
 bindkey '^m' do_enter
+
+function logmode() {
+  case "$1" in
+    on)
+      if (( ! ${+_LOGMODE_PROMPT} )); then
+        typeset -g _LOGMODE_PROMPT="$PROMPT"
+      fi
+      pshort
+      bindkey '^M' accept-line
+      ;;
+    off)
+      bindkey '^M' do_enter
+      if (( ${+_LOGMODE_PROMPT} )); then
+        PROMPT="$_LOGMODE_PROMPT"
+        unset _LOGMODE_PROMPT
+      fi
+      ;;
+    *)
+      print -u2 'usage: logmode on|off'
+      return 2
+      ;;
+  esac
+}
 
 cdfzfrepo() {
   local selected=$(echo "$WORK_REPO" | fzf --no-sort --nth=1)
