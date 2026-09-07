@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # <xbar.title>AI Usage (Claude Code / Codex / Copilot)</xbar.title>
-# <xbar.version>v1.1</xbar.version>
+# <xbar.version>v1.2</xbar.version>
 # <xbar.author>hioki</xbar.author>
-# <xbar.desc>Claude Code / Codex / GitHub Copilot のレート利用率を表示し、上限に近づく前に気づけるようにする</xbar.desc>
+# <xbar.desc>Claude Code / Codex のレート利用率と GitHub Copilot の AI credits 使用量を表示する</xbar.desc>
 # <xbar.dependencies>jq,curl,codex-cli</xbar.dependencies>
 
 # xbar は最小 PATH で起動されるため homebrew を通す
@@ -180,8 +180,10 @@ fi
 # ==== GitHub Copilot ================================================
 gtok=$(jq -r 'to_entries[0].value.oauth_token // empty' "$HOME/.config/github-copilot/apps.json" 2>/dev/null)
 
-cop_ok=0; gmax=0; gplan=""; gorg=""; greset=""; gchat="∞"; gcomp="∞"; gprem=0; gprem_cr=0
-GPREM_LIMIT=1900   # premium requests は月1900を超えると都度課金
+cop_ok=0; gmax=0; gplan=""; gorg=""; greset=""; gchat="∞"; gcomp="∞"; gai_pct=0; gai_credits=0
+# Copilot Business の1 seatは月1,900 AI creditsを共有プールに追加する。
+# 個人上限ではないため、この割合は1 seat相当との比較値。
+COPILOT_SEAT_CREDITS=1900
 if [ -n "$gtok" ]; then
   gj=$(curl -s --max-time 8 "https://api.github.com/copilot_internal/user" \
         -H "Authorization: Bearer $gtok" \
@@ -191,9 +193,8 @@ if [ -n "$gtok" ]; then
   if echo "$gj" | jq -e '.quota_snapshots' >/dev/null 2>&1; then
     cop_ok=1
     # chat/completions は unlimited なら "∞"、それ以外は used% (100 - percent_remaining)。
-    # premium は API が unlimited を返しても実際は月1900を超えると都度課金なので、
-    # credits_used / 1900 で使用率を計算する。区切りはパイプ。
-    IFS='|' read -r gplan gorg greset_iso gchat gcomp gprem gprem_cr <<<"$(echo "$gj" | jq -r --argjson lim "$GPREM_LIMIT" '
+    # AI creditsは1 seat相当の1,900 creditsと比較する。区切りはパイプ。
+    IFS='|' read -r gplan gorg greset_iso gchat gcomp gai_pct gai_credits <<<"$(echo "$gj" | jq -r --argjson ref "$COPILOT_SEAT_CREDITS" '
       def u($q): (.quota_snapshots[$q] // {})
         | if .unlimited == true then "∞"
           else ((100 - (.percent_remaining // 100)) | round | tostring) end;
@@ -202,10 +203,10 @@ if [ -n "$gtok" ]; then
           (.organization_login_list[0] // "-"),
           (.quota_reset_date_utc // "-"),
           u("chat"), u("completions"),
-          (($cr * 100 / $lim) | round | tostring),
+          (($cr * 100 / $ref) | round | tostring),
           ($cr | tostring)
         ] | join("|")')"
-    gmax=$gprem
+    gmax=$gai_pct
     for v in "$gchat" "$gcomp"; do
       [ "$v" != "∞" ] && [ "$v" -gt "$gmax" ] 2>/dev/null && gmax=$v
     done
@@ -296,7 +297,7 @@ if [ "$cop_ok" = 1 ]; then
   }
   grow "Chat"            "$gchat" ""
   grow "Completions"     "$gcomp" ""
-  grow "Premium requests" "$gprem" "  (${gprem_cr}/${GPREM_LIMIT} req)$greset"
+  grow "AI credits (seat ref)" "$gai_pct" "  (${gai_credits}/${COPILOT_SEAT_CREDITS} credits)$greset"
 else
   echo "⚠️ 取得失敗 (apps.json なし / トークン失効?) | color=red"
 fi
