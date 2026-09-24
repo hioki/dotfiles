@@ -528,8 +528,6 @@ if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-clou
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/hioki/.docker/completions $fpath)
-autoload -Uz compinit
-(( ${+_comps[docker]} )) || compinit
 # End of Docker CLI completions
 
 export PATH="$HOME/.docker/bin:$PATH"
