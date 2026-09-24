@@ -516,9 +516,6 @@ if [ -f ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh ]; 
     zsh-defer source ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/hioki/.docker/completions $fpath)
-# End of Docker CLI completions
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
@@ -529,3 +526,10 @@ if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-clou
 [ -f $HOME/.zshrc.`uname` ] && source $HOME/.zshrc.`uname`
 [ -f $HOME/.tenv.completion.zsh ] && source $HOME/.tenv.completion.zsh
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/hioki/.docker/completions $fpath)
+autoload -Uz compinit
+(( ${+_comps[docker]} )) || compinit
+# End of Docker CLI completions
+
+export PATH="$HOME/.docker/bin:$PATH"
