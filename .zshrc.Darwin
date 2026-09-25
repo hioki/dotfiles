@@ -85,3 +85,5 @@ sshf() {
   set -- ${(z)entry}
   command ssh "$@"
 }
+
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh

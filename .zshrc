@@ -512,11 +512,6 @@ export TENV_AUTO_INSTALL=true
 
 export FZF_DEFAULT_COMMAND='rg --hidden --no-ignore --files'
 
-if [ -f ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    zsh-defer source ~/.zplug/repos/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 
