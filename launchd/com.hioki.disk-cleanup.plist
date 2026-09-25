@@ -11,7 +11,7 @@
   <array>
     <string>/bin/bash</string>
     <string>-c</string>
-    <string>log="$HOME/Library/Logs/disk-cleanup.log"; { echo; echo "===== $(date '+%Y-%m-%d %H:%M:%S') ====="; "$HOME/.rhq/github.com/hioki/dotfiles/.bin/disk-cleanup.bash" --apply; } &gt;&gt; "$log" 2&gt;&amp;1</string>
+    <string>log="$HOME/Library/Logs/disk-cleanup.log"; { echo; echo "===== $(date '+%Y-%m-%d %H:%M:%S') ====="; "$HOME/rhq/github.com/hioki/dotfiles/.bin/disk-cleanup.bash" --apply; } &gt;&gt; "$log" 2&gt;&amp;1</string>
   </array>
 
   <!-- 毎月 1 日の 12:00。スリープ中なら次の起床時に一度だけ実行される。 -->

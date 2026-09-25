@@ -23,7 +23,7 @@ export PATH
 
 APPLY=0
 AGE=90
-REPO_ROOT="${DISK_CLEANUP_REPO_ROOT:-$HOME/.rhq}"
+REPO_ROOT="${DISK_CLEANUP_REPO_ROOT:-$HOME/rhq}"
 
 while [ $# -gt 0 ]; do
     case "$1" in

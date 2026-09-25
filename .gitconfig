@@ -21,7 +21,7 @@
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [ghq]
-	root = ~/.rhq
+	root = ~/rhq
 [pull]
 	rebase = false
 [log]
